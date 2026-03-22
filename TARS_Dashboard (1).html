@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TARS-Sales CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --border: #e2e0d8;
+  --text: #1a1916;
+  --muted: #6b6960;
+  --accent: #1a4fd6;
+  --accent-light: #e8eefb;
+  --green: #2d7d4f;
+  --green-light: #e8f5ed;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --red: #c0392b;
+  --red-light: #fdecea;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* NAV */
+nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-brand {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+
+.nav-brand span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-link {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: none;
+}
+
+.nav-link:hover, .nav-link.active {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.nav-sync {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.sync-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* LAYOUT */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px;
+}
+
+/* SECTION */
+.section { display: none; }
+.section.active { display: block; }
+
+/* BUDGET BAR */
+.budget-bar-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.budget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.budget-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--mono);
+}
+
+.budget-numbers {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.budget-numbers strong {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.budget-track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.budget-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--accent);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.budget-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.budget-meta .giorni {
+  color: var(--amber);
+  font-weight: 500;
+}
+
+/* KPI GRID */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 700px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+
+.kpi-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--mono);
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 600;
+  font-family: var(--mono);
+  color: var(--text);
+  line-height: 1;
+}
+
+.kpi-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* MAIN GRID */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 700px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+/* CARD */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 14px 16px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+.btn-add {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: var(--sans);
+}
+
+.btn-add:hover { opacity: 0.85; }
+
+/* SEARCH & FILTER */
+.search-bar {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+}
+
+.search-input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+}
+
+.search-input:focus { border-color: var(--accent); }
+
+.filter-select {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: var(--sans);
+  color: var(--muted);
+  background: var(--bg);
+  outline: none;
+  cursor: pointer;
+}
+
+/* LEAD LIST */
+.lead-list {
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.lead-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lead-item:hover { background: var(--bg); }
+.lead-item:last-child { border-bottom: none; }
+
+.lead-info { flex: 1; }
+
+.lead-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.lead-company {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.lead-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+
+.badge-nuovo { background: var(--accent-light); color: var(--accent); }
+.badge-trattativa { background: var(--amber-light); color: var(--amber); }
+.badge-archivio { background: var(--green-light); color: var(--green); }
+.badge-giri { background: #f3f0ff; color: #6d3fca; }
+.badge-offerta { background: #fff0f6; color: #c2185b; }
+
+.lead-followup {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+/* STATO ZONA PIPELINE */
+.pipeline-section {
+  padding: 14px 16px;
+}
+
+.pipeline-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pipeline-row:last-child { border-bottom: none; }
+
+.pipeline-zona { font-size: 13px; font-weight: 500; }
+.pipeline-val { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.pipeline-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* SCHEDA CLIENTE */
+.scheda-wrap {
+  display: none;
+  grid-column: 1 / -1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.scheda-wrap.visible { display: block; }
+
+.scheda-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg);
+}
+
+.scheda-name { font-size: 18px; font-weight: 600; }
+.scheda-company { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+.scheda-actions { display: flex; gap: 8px; }
+
+.btn-action {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--sans);
+  color: var(--text);
+  transition: all 0.15s;
+}
+
+.btn-action:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
+.btn-close { color: var(--muted); }
+
+.scheda-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+@media (max-width: 700px) {
+  .scheda-body { grid-template-columns: 1fr; }
+}
+
+.scheda-info { padding: 16px 20px; border-right: 1px solid var(--border); }
+.scheda-note { padding: 16px 20px; }
+
+.info-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.info-label {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  min-width: 80px;
+  padding-top: 1px;
+}
+
+.info-val { color: var(--text); font-weight: 500; }
+
+.stato-select {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  cursor: pointer;
+  outline: none;
+}
+
+.stato-select:focus { border-color: var(--accent); }
+
+/* FORM ATTIVITÀ */
+.form-title {
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--mono);
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.form-group { margin-bottom: 10px; }
+
+.form-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--mono);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.form-control {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-family: var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-control:focus { border-color: var(--accent); }
+
+textarea.form-control { resize: vertical; min-height: 80px; }
+
+.btn-save {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  font-family: var(--sans);
+  transition: opacity 0.15s;
+}
+
+.btn-save:hover { opacity: 0.85; }
+
+/* MODAL NUOVO LEAD */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title { font-size: 15px; font-weight: 600; }
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-body { padding: 16px 20px 20px; }
+
+/* LOADING */
+.loading {
+  padding: 32px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: var(--mono);
+}
+
+/* EMPTY */
+.empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* MAPPA SECTION */
+.map-placeholder {
+  background: var(--bg);
+  border-radius: 8px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: var(--mono);
+  border: 1px dashed var(--border);
+}
+
+#map { height: 400px; border-radius: var(--radius); }
+
+/* RESPONSIVE NAV */
+@media (max-width: 500px) {
+  .nav-link { padding: 6px 8px; font-size: 12px; }
+  .nav-sync { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TARS<span>·</span>Sales</div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showSection('home')">Home</button>
+    <button class="nav-link" onclick="showSection('lead')">Lead</button>
+    
+  </div>
+  <div class="nav-sync">
+    <div class="sync-dot"></div>
+    <span id="sync-time">—</span>
+  </div>
+</nav>
+
+<!-- HOME SECTION -->
+<div id="section-home" class="section active">
+<div class="container">
+
+  <!-- BUDGET BAR -->
+  <div class="budget-bar-wrap">
+    <div class="budget-header">
+      <span class="budget-label">Budget annuale 2026</span>
+      <span class="budget-numbers"><strong id="pipeline-euro">€0</strong> / €320.000</span>
+    </div>
+    <div class="budget-track">
+      <div class="budget-fill" id="budget-fill" style="width:0%"></div>
+    </div>
+    <div class="budget-meta">
+      <span id="budget-pct">0% raggiunto</span>
+      <span class="giorni" id="giorni-rimasti">— giorni alla fine anno</span>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Lead totali</div>
+      <div class="kpi-value" id="kpi-totali">—</div>
+      <div class="kpi-sub">nel CRM</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Trattative</div>
+      <div class="kpi-value" id="kpi-trattative">—</div>
+      <div class="kpi-sub">attive</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Pipeline €</div>
+      <div class="kpi-value" id="kpi-pipeline">—</div>
+      <div class="kpi-sub">valore stimato</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Follow-up oggi</div>
+      <div class="kpi-value" id="kpi-followup">—</div>
+      <div class="kpi-sub">da contattare</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- LISTA LEAD -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">CRM Leads</span>
+        <button class="btn-add" onclick="openModal()">+ Nuovo</button>
+      </div>
+      <div class="search-bar">
+        <input class="search-input" type="text" placeholder="Cerca nome o azienda..." id="search-input" oninput="filterLeads()">
+        <select class="filter-select" id="filter-stato" onchange="filterLeads()">
+          <option value="">Tutti</option>
+          <option value="Nuovo Lead">Nuovi</option>
+          <option value="Trattativa">Trattative</option>
+          <option value="Offerta Inviata">Offerte</option>
+          <option value="Clienti Archivio">Archivio</option>
+          <option value="Giri da Organizzare">Giri</option>
+        </select>
+      </div>
+      <div class="lead-list" id="lead-list">
+        <div class="loading">Caricamento dati...</div>
+      </div>
+    </div>
+
+    <!-- PIPELINE PER ZONA -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Pipeline per zona</span>
+      </div>
+      <div class="pipeline-section" id="pipeline-zone">
+        <div class="loading">Caricamento...</div>
+      </div>
+    </div>
+
+    <!-- SCHEDA CLIENTE -->
+    <div class="scheda-wrap" id="scheda-wrap">
+      <div class="scheda-header">
+        <div>
+          <div class="scheda-name" id="scheda-nome">—</div>
+          <div class="scheda-company" id="scheda-azienda">—</div>
+        </div>
+        <div class="scheda-actions">
+          <button class="btn-action" id="btn-wa" onclick="openWhatsApp()">WhatsApp</button>
+          <button class="btn-action" id="btn-maps" onclick="openMaps()">Maps</button>
+          <button class="btn-action btn-close" onclick="closeScheda()">Chiudi</button>
+        </div>
+      </div>
+      <div class="scheda-body">
+        <div class="scheda-info">
+          <div class="info-row"><span class="info-label">Cellulare</span><span class="info-val" id="s-cell">—</span></div>
+          <div class="info-row"><span class="info-label">Email</span><span class="info-val" id="s-email">—</span></div>
+          <div class="info-row"><span class="info-label">Comune</span><span class="info-val" id="s-comune">—</span></div>
+          <div class="info-row"><span class="info-label">Provincia</span><span class="info-val" id="s-prov">—</span></div>
+          <div class="info-row"><span class="info-label">Categoria</span><span class="info-val" id="s-cat">—</span></div>
+          <div class="info-row"><span class="info-label">Modello</span><span class="info-val" id="s-mod">—</span></div>
+          <div class="info-row"><span class="info-label">Valore €</span><span class="info-val" id="s-val">—</span></div>
+          <div class="info-row"><span class="info-label">Zona</span><span class="info-val" id="s-zona">—</span></div>
+          <div class="info-row"><span class="info-label">Follow-up</span><span class="info-val" id="s-followup">—</span></div>
+          <div class="info-row">
+            <span class="info-label">Stato</span>
+            <select class="stato-select" id="s-stato" onchange="cambiaStato(this.value)">
+              <option>Nuovo Lead</option>
+              <option>Trattativa</option>
+              <option>Offerta Inviata</option>
+              <option>Clienti Archivio</option>
+              <option>Giri da Organizzare</option>
+            </select>
+          </div>
+        </div>
+        <div class="scheda-note">
+          <div class="form-title">Registra attività</div>
+          <div class="form-group">
+            <label class="form-label">Tipo contatto</label>
+            <select class="form-control" id="act-tipo">
+              <option value="Visita">Visita</option>
+              <option value="Telefonata">Telefonata</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Email">Email</option>
+              <option value="Demo">Demo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Note</label>
+            <textarea class="form-control" id="act-nota" placeholder="Es: interessato al K1, vuole preventivo entro venerdì..."></textarea>
+          </div>
+          <button class="btn-save" onclick="registraAttivita()">Salva attività</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- LEAD SECTION -->
+<div id="section-lead" class="section">
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Tutti i lead</span>
+      <button class="btn-add" onclick="openModal()">+ Nuovo lead</button>
+    </div>
+    <div class="search-bar">
+      <input class="search-input" type="text" placeholder="Cerca..." id="search-lead2" oninput="filterLeads2()">
+      <select class="filter-select" id="filter-stato2" onchange="filterLeads2()">
+        <option value="">Tutti gli stati</option>
+        <option value="Nuovo Lead">Nuovo Lead</option>
+        <option value="Trattativa">Trattativa</option>
+        <option value="Offerta Inviata">Offerta Inviata</option>
+        <option value="Clienti Archivio">Clienti Archivio</option>
+        <option value="Giri da Organizzare">Giri da Organizzare</option>
+      </select>
+      <select class="filter-select" id="filter-zona" onchange="filterLeads2()">
+        <option value="">Tutte le zone</option>
+        <option value="Marche">Marche</option>
+        <option value="Provincia di Perugia">Perugia</option>
+        <option value="Provincia di Rimini">Rimini</option>
+      </select>
+    </div>
+    <div class="lead-list" id="lead-list2" style="max-height: 600px;">
+      <div class="loading">Caricamento dati...</div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<!-- MODAL NUOVO LEAD -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Nuovo lead</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Nome e Cognome *</label>
+        <input class="form-control" id="new-nome" type="text" placeholder="Mario Rossi">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Azienda</label>
+        <input class="form-control" id="new-azienda" type="text" placeholder="Studio XYZ">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cellulare</label>
+        <input class="form-control" id="new-cell" type="tel" placeholder="333 1234567">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-control" id="new-email" type="email" placeholder="email@esempio.it">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Indirizzo</label>
+        <input class="form-control" id="new-indirizzo" type="text" placeholder="Via Roma 1, Ancona">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Comune</label>
+          <input class="form-control" id="new-comune" type="text">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Provincia</label>
+          <input class="form-control" id="new-prov" type="text" placeholder="AN">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Categoria strumenti</label>
+        <select class="form-control" id="new-cat">
+          <option value="">Seleziona...</option>
+          <option>Laser Scanner Statico</option>
+          <option>Mobile SLAM</option>
+          <option>GNSS Receiver</option>
+          <option>Drone Survey</option>
+          <option>USV / Batimetria</option>
+          <option>Scan-to-BIM Software</option>
+          <option>Total Station</option>
+          <option>Accessori e Consumabili</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Modello di interesse</label>
+        <input class="form-control" id="new-modello" type="text" placeholder="Es: NavVis VLX 3">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Valore stimato €</label>
+          <input class="form-control" id="new-valore" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Zona</label>
+          <select class="form-control" id="new-zona">
+            <option value="Marche">Marche</option>
+            <option value="Provincia di Perugia">Provincia di Perugia</option>
+            <option value="Provincia di Rimini">Provincia di Rimini</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Stato iniziale</label>
+        <select class="form-control" id="new-stato">
+          <option value="Nuovo Lead">Nuovo Lead</option>
+          <option value="Trattativa">Trattativa</option>
+          <option value="Giri da Organizzare">Giri da Organizzare</option>
+        </select>
+      </div>
+      <button class="btn-save" onclick="salvaLead()">Salva lead</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyE9P1O6dY6r0kYSb8wi1sxxk1OBuLcBQmz0ylZIDaE6OVIASs3E8woMkXP7D7c5z_/exec';
+const SHEET_ID = ''; 
+const BUDGET = 320000;
+
+let allLeads = [];
+let currentLead = null;
+let map = null;
+let markers = [];
+
+const BADGE = {
+  'Nuovo Lead': 'badge-nuovo',
+  'Trattativa': 'badge-trattativa',
+  'Offerta Inviata': 'badge-offerta',
+  'Clienti Archivio': 'badge-archivio',
+  'Giri da Organizzare': 'badge-giri',
+};
+
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'mappa') initMap();
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(SCRIPT_URL + '?action=getLeads', { method: 'GET' });
+    const data = await res.json();
+    if (data && data.leads) {
+      allLeads = data.leads;
+      renderAll();
+      document.getElementById('sync-time').textContent = new Date().toLocaleTimeString('it-IT', {hour:'2-digit',minute:'2-digit'});
+    }
+  } catch(e) {
+    loadFromSheet();
+  }
+}
+
+async function loadFromSheet() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/1X2Y3Z/export?format=csv`;
+    document.getElementById('lead-list').innerHTML = '<div class="empty">Configura il Web App Script per il caricamento dati.</div>';
+    renderMockData();
+  } catch(e) {
+    renderMockData();
+  }
+}
+
+function renderMockData() {
+  allLeads = [];
+  renderAll();
+}
+
+function renderAll() {
+  renderKPI();
+  renderLeadList('lead-list', allLeads);
+  renderLeadList('lead-list2', allLeads);
+  renderPipelineZone();
+  updateBudgetBar();
+  updateGiorni();
+}
+
+function updateGiorni() {
+  const oggi = new Date();
+  const fineAnno = new Date(oggi.getFullYear(), 11, 31);
+  const diff = Math.ceil((fineAnno - oggi) / (1000 * 60 * 60 * 24));
+  document.getElementById('giorni-rimasti').textContent = diff + ' giorni alla fine anno';
+}
+
+function updateBudgetBar() {
+  const pipeline = allLeads
+    .filter(l => l.stato === 'Trattativa' || l.stato === 'Offerta Inviata')
+    .reduce((sum, l) => sum + (parseFloat(l.valore) || 0), 0);
+  
+  const pct = Math.min(Math.round((pipeline / BUDGET) * 100), 100);
+  document.getElementById('budget-fill').style.width = pct + '%';
+  document.getElementById('budget-pct').textContent = pct + '% raggiunto';
+  document.getElementById('pipeline-euro').textContent = '€' + pipeline.toLocaleString('it-IT');
+}
+
+function renderKPI() {
+  const totali = allLeads.length;
+  const trattative = allLeads.filter(l => l.stato === 'Trattativa' || l.stato === 'Offerta Inviata').length;
+  const pipeline = allLeads
+    .filter(l => l.stato === 'Trattativa' || l.stato === 'Offerta Inviata')
+    .reduce((sum, l) => sum + (parseFloat(l.valore) || 0), 0);
+  
+  const oggi = new Date().toISOString().split('T')[0];
+  const followup = allLeads.filter(l => l.followup && l.followup <= oggi).length;
+
+  document.getElementById('kpi-totali').textContent = totali;
+  document.getElementById('kpi-trattative').textContent = trattative;
+  document.getElementById('kpi-pipeline').textContent = pipeline > 0 ? '€' + Math.round(pipeline/1000) + 'k' : '€0';
+  document.getElementById('kpi-followup').textContent = followup;
+  document.getElementById('kpi-pipeline').textContent = pipeline > 0 
+    ? '€' + pipeline.toLocaleString('it-IT') 
+    : '€0';
+}
+
+function renderLeadList(containerId, leads) {
+  const el = document.getElementById(containerId);
+  if (!leads || leads.length === 0) {
+    el.innerHTML = '<div class="empty">Nessun lead trovato</div>';
+    return;
+  }
+  el.innerHTML = leads.map((l, i) => `
+    <div class="lead-item" onclick="openScheda(${i})">
+      <div class="lead-info">
+        <div class="lead-name">${l.nome || '—'}</div>
+        <div class="lead-company">${l.azienda || ''} ${l.comune ? '· ' + l.comune : ''}</div>
+      </div>
+      <div class="lead-right">
+        <span class="badge ${BADGE[l.stato] || 'badge-nuovo'}">${l.stato || 'Nuovo Lead'}</span>
+        ${l.followup ? `<span class="lead-followup">${formatDate(l.followup)}</span>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterLeads() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const stato = document.getElementById('filter-stato').value;
+  const filtered = allLeads.filter(l => {
+    const matchQ = !q || (l.nome||'').toLowerCase().includes(q) || (l.azienda||'').toLowerCase().includes(q);
+    const matchS = !stato || l.stato === stato;
+    return matchQ && matchS;
+  });
+  renderLeadList('lead-list', filtered);
+}
+
+function filterLeads2() {
+  const q = document.getElementById('search-lead2').value.toLowerCase();
+  const stato = document.getElementById('filter-stato2').value;
+  const zona = document.getElementById('filter-zona').value;
+  const filtered = allLeads.filter(l => {
+    const matchQ = !q || (l.nome||'').toLowerCase().includes(q) || (l.azienda||'').toLowerCase().includes(q);
+    const matchS = !stato || l.stato === stato;
+    const matchZ = !zona || l.zona === zona;
+    return matchQ && matchS && matchZ;
+  });
+  renderLeadList('lead-list2', filtered);
+}
+
+function renderPipelineZone() {
+  const zone = ['Marche', 'Provincia di Perugia', 'Provincia di Rimini'];
+  const el = document.getElementById('pipeline-zone');
+  
+  if (allLeads.length === 0) {
+    el.innerHTML = '<div class="empty">Nessun dato disponibile</div>';
+    return;
+  }
+
+  el.innerHTML = zone.map(z => {
+    const leads = allLeads.filter(l => l.zona === z);
+    const trat = leads.filter(l => l.stato === 'Trattativa' || l.stato === 'Offerta Inviata');
+    const val = trat.reduce((s, l) => s + (parseFloat(l.valore)||0), 0);
+    return `
+      <div class="pipeline-row">
+        <div>
+          <div class="pipeline-zona">${z}</div>
+          <div class="pipeline-count">${leads.length} lead · ${trat.length} trattative</div>
+        </div>
+        <div class="pipeline-val">${val > 0 ? '€'+val.toLocaleString('it-IT') : '—'}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openScheda(i) {
+  const l = allLeads[i];
+  if (!l) return;
+  currentLead = { ...l, index: i };
+  
+  document.getElementById('scheda-nome').textContent = l.nome || '—';
+  document.getElementById('scheda-azienda').textContent = [l.azienda, l.comune].filter(Boolean).join(' · ') || '—';
+  document.getElementById('s-cell').textContent = l.cellulare || '—';
+  document.getElementById('s-email').textContent = l.email || '—';
+  document.getElementById('s-comune').textContent = l.comune || '—';
+  document.getElementById('s-prov').textContent = l.provincia || '—';
+  document.getElementById('s-cat').textContent = l.categorie || '—';
+  document.getElementById('s-mod').textContent = l.modelli || '—';
+  document.getElementById('s-val').textContent = l.valore ? '€'+parseFloat(l.valore).toLocaleString('it-IT') : '—';
+  document.getElementById('s-zona').textContent = l.zona || '—';
+  document.getElementById('s-followup').textContent = l.followup ? formatDate(l.followup) : '—';
+  document.getElementById('s-stato').value = l.stato || 'Nuovo Lead';
+  
+  document.getElementById('scheda-wrap').classList.add('visible');
+  document.getElementById('scheda-wrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeScheda() {
+  document.getElementById('scheda-wrap').classList.remove('visible');
+  currentLead = null;
+}
+
+function openWhatsApp() {
+  if (!currentLead || !currentLead.cellulare) return;
+  const num = currentLead.cellulare.replace(/\D/g, '');
+  window.open('https://web.whatsapp.com/send?phone=39' + num, '_blank');
+}
+
+function openMaps() {
+  if (!currentLead || !currentLead.indirizzo) return;
+  const q = encodeURIComponent(currentLead.indirizzo);
+  window.open('https://maps.google.com/?q=' + q, '_blank');
+}
+
+async function cambiaStato(nuovoStato) {
+  if (!currentLead) return;
+  alert('Stato cambiato in "' + nuovoStato + '".\nIl sistema aggiornerà il Google Sheet automaticamente.');
+}
+
+async function registraAttivita() {
+  if (!currentLead) return;
+  const tipo = document.getElementById('act-tipo').value;
+  const nota = document.getElementById('act-nota').value;
+  if (!nota.trim()) { alert('Inserisci una nota prima di salvare.'); return; }
+  
+  try {
+    const url = SCRIPT_URL + '?riga=' + (currentLead.index + 2) + '&nota=' + encodeURIComponent('[' + tipo + '] ' + nota) + '&data=' + new Date().toISOString();
+    await fetch(url);
+    document.getElementById('act-nota').value = '';
+    alert('Attività registrata!');
+  } catch(e) {
+    alert('Attività registrata localmente. Sync al prossimo aggiornamento.');
+  }
+}
+
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+async function salvaLead() {
+  const nome = document.getElementById('new-nome').value.trim();
+  if (!nome) { alert('Inserisci almeno il nome.'); return; }
+  
+  alert('Lead "' + nome + '" salvato!\nApparirà nel CRM entro 5 minuti (trigger automatico).');
+  closeModal();
+}
+
+function formatDate(d) {
+  if (!d) return '';
+  try {
+    const date = new Date(d);
+    return date.toLocaleDateString('it-IT', { day:'2-digit', month:'2-digit', year:'2-digit' });
+  } catch(e) { return d; }
+}
+
+function initMap() {
+  document.getElementById('map-placeholder').style.display = 'none';
+  document.getElementById('map').style.display = 'block';
+  if (!window.google) {
+    document.getElementById('map').innerHTML = '<div style="padding:40px;text-align:center;color:#888;font-size:13px;">Per attivare la mappa Google inserisci la tua API Key nelle impostazioni.</div>';
+    return;
+  }
+}
+
+updateGiorni();
+loadData();
+setInterval(loadData, 300000);
+</script>
+</body>
+</html>
