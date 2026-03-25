@@ -432,7 +432,7 @@ nav {
 .btn-action:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
 .btn-close { color: var(--muted); }
 
-/* Pulsante Modifica (stile discreto) */
+/* Pulsante Modifica */
 .btn-modifica {
   background: none;
   border: 1px solid #aaa;
@@ -479,6 +479,27 @@ nav {
 }
 
 .info-val { color: var(--text); font-weight: 500; }
+
+/* Rating a stelle */
+.rating-stars {
+  display: inline-flex;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 18px;
+}
+.rating-stars span {
+  color: #ccc;
+  transition: color 0.1s;
+}
+.rating-stars span.active {
+  color: gold;
+}
+.rating-stars span.hover {
+  color: #ffcc00;
+}
+.rating-color-red .rating-stars span.active { color: #e67e22; } /* arancione per 1-2 */
+.rating-color-yellow .rating-stars span.active { color: #f1c40f; }
+.rating-color-green .rating-stars span.active { color: #2ecc71; }
 
 .stato-select {
   border: 1px solid var(--border);
@@ -655,7 +676,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 <div id="section-home" class="section active">
 <div class="container">
 
-  <!-- BUDGET BAR — conta solo stato "Cliente" (vendite chiuse) -->
+  <!-- BUDGET BAR -->
   <div class="budget-bar-wrap">
     <div class="budget-header">
       <span class="budget-label">Budget annuale 2026</span>
@@ -740,7 +761,6 @@ textarea.form-control { resize: vertical; min-height: 80px; }
           <button class="btn-action" onclick="openWhatsApp()">WhatsApp</button>
           <button class="btn-action" onclick="openMaps()">Maps</button>
           <button class="btn-action btn-close" onclick="closeScheda()">Chiudi</button>
-          <!-- NUOVO PULSANTE MODIFICA -->
           <button class="btn-modifica" onclick="apriModificaLead()">✏️ Modifica</button>
         </div>
       </div>
@@ -755,6 +775,9 @@ textarea.form-control { resize: vertical; min-height: 80px; }
           <div class="info-row"><span class="info-label">Valore €</span><span class="info-val" id="s-val">—</span></div>
           <div class="info-row"><span class="info-label">Zona</span><span class="info-val" id="s-zona">—</span></div>
           <div class="info-row"><span class="info-label">Follow-up</span><span class="info-val" id="s-followup">—</span></div>
+          <div class="info-row"><span class="info-label">Rating</span>
+            <div class="info-val" id="s-rating"></div>
+          </div>
           <div class="info-row">
             <span class="info-label">Stato</span>
             <select class="stato-select" id="s-stato" onchange="cambiaStato(this.value)">
@@ -841,7 +864,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
       </div>
       <div class="form-group">
         <label class="form-label">Cellulare</label>
-        <input class="form-control" id="new-cell" type="tel" placeholder="333 1234567">
+        <input class="form-control" id="new-cell" type="tel" placeholder="+39 333 1234567">
       </div>
       <div class="form-group">
         <label class="form-label">Email</label>
@@ -894,6 +917,17 @@ textarea.form-control { resize: vertical; min-height: 80px; }
         </div>
       </div>
       <div class="form-group">
+        <label class="form-label">Rating</label>
+        <div class="rating-stars" id="rating-selector">
+          <span data-value="1">★</span>
+          <span data-value="2">★</span>
+          <span data-value="3">★</span>
+          <span data-value="4">★</span>
+          <span data-value="5">★</span>
+        </div>
+        <input type="hidden" id="new-rating" value="3">
+      </div>
+      <div class="form-group">
         <label class="form-label">Stato iniziale</label>
         <select class="form-control" id="new-stato">
           <option value="Nuovo Lead">Nuovo Lead</option>
@@ -914,7 +948,7 @@ const BUDGET = 320000;
 
 let allLeads = [];
 let currentLead = null;
-let leadInModifica = null;   // oggetto lead che stiamo modificando
+let leadInModifica = null;
 
 const BADGE = {
   'Nuovo Lead'         : 'badge-nuovo',
@@ -977,7 +1011,6 @@ function updateGiorni() {
   document.getElementById('giorni-rimasti').textContent = diff + ' giorni alla fine anno';
 }
 
-// BUDGET BAR: somma solo i lead con stato "Cliente" (vendite chiuse)
 function updateBudgetBar() {
   const venduto = allLeads
     .filter(l => l.stato === 'Cliente')
@@ -995,7 +1028,6 @@ function renderKPI() {
     l.stato === 'Trattativa' || l.stato === 'Offerta Inviata'
   ).length;
 
-  // Pipeline = valore trattative aperte (non ancora chiuse)
   const pipeline = allLeads
     .filter(l => l.stato === 'Trattativa' || l.stato === 'Offerta Inviata')
     .reduce((sum, l) => sum + (parseFloat(l.valore) || 0), 0);
@@ -1089,7 +1121,7 @@ function filterLeads2() {
 function openScheda(i) {
   const l = allLeads[i];
   if (!l) return;
-  currentLead = { ...l, _rowIndex: i + 2 }; // +2 perché riga 1 = intestazione
+  currentLead = { ...l, _rowIndex: i + 2 };
 
   document.getElementById('scheda-nome').textContent    = l.nome || '—';
   document.getElementById('scheda-azienda').textContent = [l.azienda, l.comune].filter(Boolean).join(' · ') || '—';
@@ -1103,6 +1135,10 @@ function openScheda(i) {
   document.getElementById('s-zona').textContent    = l.zona || '—';
   document.getElementById('s-followup').textContent= l.followup ? formatDate(l.followup) : '—';
   document.getElementById('s-stato').value         = l.stato || 'Nuovo Lead';
+  // Rating
+  const ratingVal = l.rating ? parseInt(l.rating) : 3;
+  const ratingHtml = creaStelle(ratingVal, true);
+  document.getElementById('s-rating').innerHTML = ratingHtml;
 
   document.getElementById('scheda-wrap').classList.add('visible');
   document.getElementById('scheda-wrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1115,8 +1151,9 @@ function closeScheda() {
 
 function openWhatsApp() {
   if (!currentLead || !currentLead.cellulare) return;
-  const num = currentLead.cellulare.replace(/\D/g, '');
-  window.open('https://web.whatsapp.com/send?phone=39' + num, '_blank');
+  let num = currentLead.cellulare.replace(/\D/g, '');
+  if (!num.startsWith('39')) num = '39' + num;
+  window.open('https://web.whatsapp.com/send?phone=' + num, '_blank');
 }
 
 function openMaps() {
@@ -1128,7 +1165,6 @@ function openMaps() {
 
 async function cambiaStato(nuovoStato) {
   if (!currentLead) return;
-  
   try {
     showToast('Aggiornamento stato...');
     const url = SCRIPT_URL
@@ -1165,14 +1201,63 @@ async function registraAttivita() {
   }
 }
 
+// ── RATING STELLE ─────────────────────────────────────────────
+function creaStelle(valore, soloVisualizzazione = false) {
+  const stelle = [];
+  for (let i = 1; i <= 5; i++) {
+    const attiva = i <= valore;
+    stelle.push(`<span class="${attiva ? 'active' : ''}" ${!soloVisualizzazione ? `data-value="${i}"` : ''}>★</span>`);
+  }
+  let html = `<div class="rating-stars">${stelle.join('')}</div>`;
+  if (!soloVisualizzazione) {
+    html += `<input type="hidden" id="new-rating" value="${valore}">`;
+  }
+  return html;
+}
+
+function initRatingSelector() {
+  const container = document.getElementById('rating-selector');
+  if (!container) return;
+  const stars = container.querySelectorAll('span');
+  const inputHidden = document.getElementById('new-rating');
+  function setRating(val) {
+    stars.forEach((star, idx) => {
+      if (idx < val) star.classList.add('active');
+      else star.classList.remove('active');
+    });
+    if (inputHidden) inputHidden.value = val;
+  }
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      const val = parseInt(star.getAttribute('data-value'));
+      setRating(val);
+    });
+    star.addEventListener('mouseenter', () => {
+      const val = parseInt(star.getAttribute('data-value'));
+      stars.forEach((s, idx) => {
+        if (idx < val) s.classList.add('hover');
+        else s.classList.remove('hover');
+      });
+    });
+  });
+  container.addEventListener('mouseleave', () => {
+    const currentVal = parseInt(inputHidden ? inputHidden.value : 3);
+    stars.forEach((star, idx) => {
+      if (idx < currentVal) star.classList.add('active');
+      else star.classList.remove('active');
+      star.classList.remove('hover');
+    });
+  });
+  // set initial
+  setRating(parseInt(inputHidden ? inputHidden.value : 3));
+}
+
 // ── MODAL NUOVO LEAD & MODIFICA ──────────────────────────────
 function openModal(leadDaModificare = null) {
-  // Se passiamo un lead, siamo in modifica
   if (leadDaModificare) {
     leadInModifica = leadDaModificare;
     document.getElementById('modal-title').innerText = '✏️ Modifica lead';
     document.getElementById('btn-salva-lead').innerText = 'Salva modifiche';
-    // Precompila i campi
     document.getElementById('new-nome').value = leadDaModificare.nome || '';
     document.getElementById('new-azienda').value = leadDaModificare.azienda || '';
     document.getElementById('new-cell').value = leadDaModificare.cellulare || '';
@@ -1185,14 +1270,25 @@ function openModal(leadDaModificare = null) {
     document.getElementById('new-valore').value = leadDaModificare.valore || '';
     document.getElementById('new-zona').value = leadDaModificare.zona || 'Marche';
     document.getElementById('new-stato').value = leadDaModificare.stato || 'Nuovo Lead';
+    // rating
+    const ratingVal = leadDaModificare.rating ? parseInt(leadDaModificare.rating) : 3;
+    const ratingContainer = document.getElementById('rating-selector');
+    if (ratingContainer) {
+      const stars = ratingContainer.querySelectorAll('span');
+      stars.forEach((star, idx) => {
+        if (idx < ratingVal) star.classList.add('active');
+        else star.classList.remove('active');
+      });
+      const hidden = document.getElementById('new-rating');
+      if (hidden) hidden.value = ratingVal;
+    }
   } else {
     leadInModifica = null;
     document.getElementById('modal-title').innerText = 'Nuovo lead';
     document.getElementById('btn-salva-lead').innerText = 'Salva lead';
-    // Resetta il form
     document.getElementById('new-nome').value = '';
     document.getElementById('new-azienda').value = '';
-    document.getElementById('new-cell').value = '';
+    document.getElementById('new-cell').value = '+39 ';
     document.getElementById('new-email').value = '';
     document.getElementById('new-indirizzo').value = '';
     document.getElementById('new-comune').value = '';
@@ -1202,15 +1298,24 @@ function openModal(leadDaModificare = null) {
     document.getElementById('new-valore').value = '';
     document.getElementById('new-zona').value = 'Marche';
     document.getElementById('new-stato').value = 'Nuovo Lead';
+    // reset rating
+    const ratingContainer = document.getElementById('rating-selector');
+    if (ratingContainer) {
+      const stars = ratingContainer.querySelectorAll('span');
+      stars.forEach((star, idx) => {
+        if (idx < 3) star.classList.add('active');
+        else star.classList.remove('active');
+      });
+      const hidden = document.getElementById('new-rating');
+      if (hidden) hidden.value = 3;
+    }
   }
   document.getElementById('modal-overlay').classList.add('open');
 }
 
 function apriModificaLead() {
   if (!currentLead) return;
-  // Clona i dati del lead corrente (incluso _rowIndex)
   openModal(currentLead);
-  // Chiudi la scheda per non confondere
   closeScheda();
 }
 
@@ -1227,11 +1332,12 @@ async function salvaLead() {
   const nome = document.getElementById('new-nome').value.trim();
   if (!nome) { showToast('Inserisci almeno il nome.'); return; }
 
+  const rating = document.getElementById('new-rating') ? document.getElementById('new-rating').value : 3;
+
   if (leadInModifica) {
-    // MODIFICA LEAD ESISTENTE
     const params = new URLSearchParams({
       action:    'modificaLead',
-      riga:      leadInModifica._rowIndex,     // numero riga nel foglio
+      riga:      leadInModifica._rowIndex,
       nome:      nome,
       azienda:   document.getElementById('new-azienda').value.trim(),
       cell:      document.getElementById('new-cell').value.trim(),
@@ -1244,8 +1350,8 @@ async function salvaLead() {
       valore:    document.getElementById('new-valore').value || '0',
       zona:      document.getElementById('new-zona').value,
       stato:     document.getElementById('new-stato').value,
+      rating:    rating,
     });
-
     try {
       showToast('Aggiornamento in corso...');
       await fetch(SCRIPT_URL + '?' + params.toString());
@@ -1256,7 +1362,6 @@ async function salvaLead() {
       showToast('Errore di connessione. Riprova.');
     }
   } else {
-    // NUOVO LEAD
     const params = new URLSearchParams({
       action:    'nuovoLead',
       nome:      nome,
@@ -1271,8 +1376,8 @@ async function salvaLead() {
       valore:    document.getElementById('new-valore').value || '0',
       zona:      document.getElementById('new-zona').value,
       stato:     document.getElementById('new-stato').value,
+      rating:    rating,
     });
-
     try {
       showToast('Salvataggio in corso...');
       await fetch(SCRIPT_URL + '?' + params.toString());
@@ -1296,7 +1401,8 @@ function formatDate(d) {
 // ── AVVIO ─────────────────────────────────────────────────────
 updateGiorni();
 loadData();
-setInterval(loadData, 300000); // ricarica ogni 5 minuti
+setInterval(loadData, 300000);
+initRatingSelector();
 </script>
 </body>
 </html>
