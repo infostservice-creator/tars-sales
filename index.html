@@ -1435,14 +1435,13 @@ async function salvaLead() {
   }
 }
 
-// ── GESTIONE FOTO (caricamento su Drive) ─────────────────────
+// ── GESTIONE FOTO (caricamento su Drive con POST) ─────────────
 async function caricaFoto() {
   if (!currentLead) {
     showToast('Apri prima un lead.');
     return;
   }
 
-  // Crea un input file invisibile
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
@@ -1453,31 +1452,30 @@ async function caricaFoto() {
     showToast('Caricamento foto in corso...');
 
     try {
-      // Prepara i dati per l'invio ad Apps Script
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = async () => {
         const base64 = reader.result.split(',')[1];
-        const params = new URLSearchParams({
-          action: 'caricaFoto',
-          riga: currentLead._rowIndex,
-          nomeFile: file.name,
-          fileData: base64,
-          folderId: DRIVE_FOLDER_ID
+        const formData = new FormData();
+        formData.append('action', 'caricaFoto');
+        formData.append('riga', currentLead._rowIndex);
+        formData.append('nomeFile', file.name);
+        formData.append('fileData', base64);
+        formData.append('folderId', DRIVE_FOLDER_ID);
+
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: formData
         });
-        const response = await fetch(SCRIPT_URL + '?' + params.toString());
         const result = await response.json();
         if (result.success) {
           showToast('✓ Foto caricata!');
-          // Aggiorna il lead corrente con il nuovo link
           currentLead.foto = result.url;
-          // Aggiorna l'anteprima nella scheda
           const fotoDiv = document.getElementById('foto-preview');
           fotoDiv.innerHTML = `
             <img class="foto-thumb" src="${result.url}" alt="Biglietto da visita">
             <br><a class="foto-link" href="${result.url}" target="_blank">Apri immagine</a>
           `;
-          // Ricarica i dati per aggiornare la lista (opzionale)
           setTimeout(loadData, 2000);
         } else {
           showToast('Errore: ' + result.error);
