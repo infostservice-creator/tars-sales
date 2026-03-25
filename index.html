@@ -432,7 +432,6 @@ nav {
 .btn-action:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
 .btn-close { color: var(--muted); }
 
-/* Pulsante Modifica */
 .btn-modifica {
   background: none;
   border: 1px solid #aaa;
@@ -448,6 +447,21 @@ nav {
   background-color: #f0f0f0;
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.btn-foto {
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.btn-foto:hover {
+  background-color: var(--accent-light);
 }
 
 .scheda-body {
@@ -480,7 +494,25 @@ nav {
 
 .info-val { color: var(--text); font-weight: 500; }
 
-/* Rating a stelle */
+.foto-container {
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.foto-thumb {
+  max-width: 100%;
+  max-height: 150px;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+.foto-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
 .rating-stars {
   display: inline-flex;
   gap: 4px;
@@ -497,9 +529,6 @@ nav {
 .rating-stars span.hover {
   color: #ffcc00;
 }
-.rating-color-red .rating-stars span.active { color: #e67e22; }
-.rating-color-yellow .rating-stars span.active { color: #f1c40f; }
-.rating-color-green .rating-stars span.active { color: #2ecc71; }
 
 .stato-select {
   border: 1px solid var(--border);
@@ -788,6 +817,11 @@ textarea.form-control { resize: vertical; min-height: 80px; }
               <option>Giri da Organizzare</option>
             </select>
           </div>
+          <!-- Sezione foto -->
+          <div class="foto-container">
+            <button class="btn-foto" onclick="caricaFoto()">📸 Carica biglietto</button>
+            <div id="foto-preview" style="margin-top: 8px;"></div>
+          </div>
         </div>
         <div class="scheda-note">
           <div class="form-title">Registra attività</div>
@@ -945,6 +979,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 // ── CONFIGURAZIONE ────────────────────────────────────────────
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyE9P1O6dY6r0kYSb8wi1sxxk1OBuLcBQmz0ylZIDaE6OVIASs3E8woMkXP7D7c5z_/exec';
 const BUDGET = 320000;
+const DRIVE_FOLDER_ID = '1FyNL7pQkGI2b8723YrtzD0zLostqZvJE'; // ID della cartella Drive
 
 let allLeads = [];
 let currentLead = null;
@@ -1139,6 +1174,17 @@ function openScheda(i) {
   const ratingVal = l.rating ? parseInt(l.rating) : 3;
   const ratingHtml = creaStelle(ratingVal, true);
   document.getElementById('s-rating').innerHTML = ratingHtml;
+  // Foto
+  const fotoUrl = l.foto || '';
+  const fotoDiv = document.getElementById('foto-preview');
+  if (fotoUrl) {
+    fotoDiv.innerHTML = `
+      <img class="foto-thumb" src="${fotoUrl}" alt="Biglietto da visita">
+      <br><a class="foto-link" href="${fotoUrl}" target="_blank">Apri immagine</a>
+    `;
+  } else {
+    fotoDiv.innerHTML = '<div class="empty" style="padding:8px 0;">Nessuna foto caricata</div>';
+  }
 
   document.getElementById('scheda-wrap').classList.add('visible');
   document.getElementById('scheda-wrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1153,7 +1199,6 @@ function openWhatsApp() {
   if (!currentLead || !currentLead.cellulare) return;
   let num = currentLead.cellulare.replace(/\D/g, '');
   if (!num.startsWith('39')) num = '39' + num;
-  // Link universale: su mobile apre l'app WhatsApp (o Business se predefinita), su PC apre web
   window.open('https://wa.me/' + num, '_blank');
 }
 
@@ -1249,7 +1294,6 @@ function initRatingSelector() {
       star.classList.remove('hover');
     });
   });
-  // set initial
   setRating(parseInt(inputHidden ? inputHidden.value : 3));
 }
 
@@ -1389,6 +1433,62 @@ async function salvaLead() {
       showToast('Errore di connessione. Riprova.');
     }
   }
+}
+
+// ── GESTIONE FOTO (caricamento su Drive) ─────────────────────
+async function caricaFoto() {
+  if (!currentLead) {
+    showToast('Apri prima un lead.');
+    return;
+  }
+
+  // Crea un input file invisibile
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.capture = 'environment'; // su mobile apre la fotocamera
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    showToast('Caricamento foto in corso...');
+
+    try {
+      // Prepara i dati per l'invio ad Apps Script
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        const base64 = reader.result.split(',')[1];
+        const params = new URLSearchParams({
+          action: 'caricaFoto',
+          riga: currentLead._rowIndex,
+          nomeFile: file.name,
+          fileData: base64,
+          folderId: DRIVE_FOLDER_ID
+        });
+        const response = await fetch(SCRIPT_URL + '?' + params.toString());
+        const result = await response.json();
+        if (result.success) {
+          showToast('✓ Foto caricata!');
+          // Aggiorna il lead corrente con il nuovo link
+          currentLead.foto = result.url;
+          // Aggiorna l'anteprima nella scheda
+          const fotoDiv = document.getElementById('foto-preview');
+          fotoDiv.innerHTML = `
+            <img class="foto-thumb" src="${result.url}" alt="Biglietto da visita">
+            <br><a class="foto-link" href="${result.url}" target="_blank">Apri immagine</a>
+          `;
+          // Ricarica i dati per aggiornare la lista (opzionale)
+          setTimeout(loadData, 2000);
+        } else {
+          showToast('Errore: ' + result.error);
+        }
+      };
+    } catch (err) {
+      console.error(err);
+      showToast('Errore durante il caricamento.');
+    }
+  };
+  input.click();
 }
 
 // ── UTILITÀ ───────────────────────────────────────────────────
