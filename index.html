@@ -414,7 +414,7 @@ nav {
 .scheda-name { font-size: 18px; font-weight: 600; }
 .scheda-company { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
-.scheda-actions { display: flex; gap: 8px; }
+.scheda-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .btn-action {
   border: 1px solid var(--border);
@@ -431,6 +431,24 @@ nav {
 
 .btn-action:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
 .btn-close { color: var(--muted); }
+
+/* Pulsante Modifica (stile discreto) */
+.btn-modifica {
+  background: none;
+  border: 1px solid #aaa;
+  color: #555;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.btn-modifica:hover {
+  background-color: #f0f0f0;
+  border-color: var(--accent);
+  color: var(--accent);
+}
 
 .scheda-body {
   display: grid;
@@ -722,6 +740,8 @@ textarea.form-control { resize: vertical; min-height: 80px; }
           <button class="btn-action" onclick="openWhatsApp()">WhatsApp</button>
           <button class="btn-action" onclick="openMaps()">Maps</button>
           <button class="btn-action btn-close" onclick="closeScheda()">Chiudi</button>
+          <!-- NUOVO PULSANTE MODIFICA -->
+          <button class="btn-modifica" onclick="apriModificaLead()">✏️ Modifica</button>
         </div>
       </div>
       <div class="scheda-body">
@@ -803,11 +823,11 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 </div>
 </div>
 
-<!-- MODAL NUOVO LEAD -->
+<!-- MODAL NUOVO LEAD (usato anche per modifica) -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">Nuovo lead</span>
+      <span class="modal-title" id="modal-title">Nuovo lead</span>
       <button class="modal-close" onclick="closeModal()">×</button>
     </div>
     <div class="modal-body">
@@ -882,7 +902,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
           <option value="Giri da Organizzare">Giri da Organizzare</option>
         </select>
       </div>
-      <button class="btn-save" onclick="salvaLead()">Salva lead</button>
+      <button class="btn-save" id="btn-salva-lead" onclick="salvaLead()">Salva lead</button>
     </div>
   </div>
 </div>
@@ -894,6 +914,7 @@ const BUDGET = 320000;
 
 let allLeads = [];
 let currentLead = null;
+let leadInModifica = null;   // oggetto lead che stiamo modificando
 
 const BADGE = {
   'Nuovo Lead'         : 'badge-nuovo',
@@ -1144,13 +1165,58 @@ async function registraAttivita() {
   }
 }
 
-// ── MODAL NUOVO LEAD ─────────────────────────────────────────
-function openModal() {
+// ── MODAL NUOVO LEAD & MODIFICA ──────────────────────────────
+function openModal(leadDaModificare = null) {
+  // Se passiamo un lead, siamo in modifica
+  if (leadDaModificare) {
+    leadInModifica = leadDaModificare;
+    document.getElementById('modal-title').innerText = '✏️ Modifica lead';
+    document.getElementById('btn-salva-lead').innerText = 'Salva modifiche';
+    // Precompila i campi
+    document.getElementById('new-nome').value = leadDaModificare.nome || '';
+    document.getElementById('new-azienda').value = leadDaModificare.azienda || '';
+    document.getElementById('new-cell').value = leadDaModificare.cellulare || '';
+    document.getElementById('new-email').value = leadDaModificare.email || '';
+    document.getElementById('new-indirizzo').value = leadDaModificare.indirizzo || '';
+    document.getElementById('new-comune').value = leadDaModificare.comune || '';
+    document.getElementById('new-prov').value = leadDaModificare.provincia || '';
+    document.getElementById('new-cat').value = leadDaModificare.categorie || '';
+    document.getElementById('new-modello').value = leadDaModificare.modelli || '';
+    document.getElementById('new-valore').value = leadDaModificare.valore || '';
+    document.getElementById('new-zona').value = leadDaModificare.zona || 'Marche';
+    document.getElementById('new-stato').value = leadDaModificare.stato || 'Nuovo Lead';
+  } else {
+    leadInModifica = null;
+    document.getElementById('modal-title').innerText = 'Nuovo lead';
+    document.getElementById('btn-salva-lead').innerText = 'Salva lead';
+    // Resetta il form
+    document.getElementById('new-nome').value = '';
+    document.getElementById('new-azienda').value = '';
+    document.getElementById('new-cell').value = '';
+    document.getElementById('new-email').value = '';
+    document.getElementById('new-indirizzo').value = '';
+    document.getElementById('new-comune').value = '';
+    document.getElementById('new-prov').value = '';
+    document.getElementById('new-cat').value = '';
+    document.getElementById('new-modello').value = '';
+    document.getElementById('new-valore').value = '';
+    document.getElementById('new-zona').value = 'Marche';
+    document.getElementById('new-stato').value = 'Nuovo Lead';
+  }
   document.getElementById('modal-overlay').classList.add('open');
+}
+
+function apriModificaLead() {
+  if (!currentLead) return;
+  // Clona i dati del lead corrente (incluso _rowIndex)
+  openModal(currentLead);
+  // Chiudi la scheda per non confondere
+  closeScheda();
 }
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
+  leadInModifica = null;
 }
 
 function closeModalOutside(e) {
@@ -1161,30 +1227,61 @@ async function salvaLead() {
   const nome = document.getElementById('new-nome').value.trim();
   if (!nome) { showToast('Inserisci almeno il nome.'); return; }
 
-  const params = new URLSearchParams({
-    action:    'nuovoLead',
-    nome:      nome,
-    azienda:   document.getElementById('new-azienda').value.trim(),
-    cell:      document.getElementById('new-cell').value.trim(),
-    email:     document.getElementById('new-email').value.trim(),
-    indirizzo: document.getElementById('new-indirizzo').value.trim(),
-    comune:    document.getElementById('new-comune').value.trim(),
-    prov:      document.getElementById('new-prov').value.trim(),
-    cat:       document.getElementById('new-cat').value,
-    modello:   document.getElementById('new-modello').value.trim(),
-    valore:    document.getElementById('new-valore').value || '0',
-    zona:      document.getElementById('new-zona').value,
-    stato:     document.getElementById('new-stato').value,
-  });
+  if (leadInModifica) {
+    // MODIFICA LEAD ESISTENTE
+    const params = new URLSearchParams({
+      action:    'modificaLead',
+      riga:      leadInModifica._rowIndex,     // numero riga nel foglio
+      nome:      nome,
+      azienda:   document.getElementById('new-azienda').value.trim(),
+      cell:      document.getElementById('new-cell').value.trim(),
+      email:     document.getElementById('new-email').value.trim(),
+      indirizzo: document.getElementById('new-indirizzo').value.trim(),
+      comune:    document.getElementById('new-comune').value.trim(),
+      prov:      document.getElementById('new-prov').value.trim(),
+      cat:       document.getElementById('new-cat').value,
+      modello:   document.getElementById('new-modello').value.trim(),
+      valore:    document.getElementById('new-valore').value || '0',
+      zona:      document.getElementById('new-zona').value,
+      stato:     document.getElementById('new-stato').value,
+    });
 
-  try {
-    showToast('Salvataggio in corso...');
-    await fetch(SCRIPT_URL + '?' + params.toString());
-    closeModal();
-    showToast('✓ Lead salvato! Aggiornamento entro 5 minuti.');
-    setTimeout(loadData, 8000);
-  } catch(e) {
-    showToast('Errore di connessione. Riprova.');
+    try {
+      showToast('Aggiornamento in corso...');
+      await fetch(SCRIPT_URL + '?' + params.toString());
+      closeModal();
+      showToast('✓ Lead modificato! Aggiornamento in corso...');
+      setTimeout(loadData, 5000);
+    } catch(e) {
+      showToast('Errore di connessione. Riprova.');
+    }
+  } else {
+    // NUOVO LEAD
+    const params = new URLSearchParams({
+      action:    'nuovoLead',
+      nome:      nome,
+      azienda:   document.getElementById('new-azienda').value.trim(),
+      cell:      document.getElementById('new-cell').value.trim(),
+      email:     document.getElementById('new-email').value.trim(),
+      indirizzo: document.getElementById('new-indirizzo').value.trim(),
+      comune:    document.getElementById('new-comune').value.trim(),
+      prov:      document.getElementById('new-prov').value.trim(),
+      cat:       document.getElementById('new-cat').value,
+      modello:   document.getElementById('new-modello').value.trim(),
+      valore:    document.getElementById('new-valore').value || '0',
+      zona:      document.getElementById('new-zona').value,
+      stato:     document.getElementById('new-stato').value,
+    });
+
+    try {
+      showToast('Salvataggio in corso...');
+      await fetch(SCRIPT_URL + '?' + params.toString());
+      closeModal();
+      showToast('✓ Lead salvato! Aggiornamento entro 5 minuti.');
+      setTimeout(loadData, 8000);
+    } catch(e) {
+      showToast('Errore di connessione. Riprova.');
+    }
   }
 }
 
