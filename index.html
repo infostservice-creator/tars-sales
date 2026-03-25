@@ -1142,12 +1142,35 @@ function closeModalOutside(e) {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
 }
 
-function salvaLead() {
+async function salvaLead() {
   const nome = document.getElementById('new-nome').value.trim();
   if (!nome) { showToast('Inserisci almeno il nome.'); return; }
 
-  showToast('Lead "' + nome + '" da aggiungere nel Google Sheet o AppSheet. Apparirà entro 5 minuti.');
-  closeModal();
+  const params = new URLSearchParams({
+    action:    'nuovoLead',
+    nome:      nome,
+    azienda:   document.getElementById('new-azienda').value.trim(),
+    cell:      document.getElementById('new-cell').value.trim(),
+    email:     document.getElementById('new-email').value.trim(),
+    indirizzo: document.getElementById('new-indirizzo').value.trim(),
+    comune:    document.getElementById('new-comune').value.trim(),
+    prov:      document.getElementById('new-prov').value.trim(),
+    cat:       document.getElementById('new-cat').value,
+    modello:   document.getElementById('new-modello').value.trim(),
+    valore:    document.getElementById('new-valore').value || '0',
+    zona:      document.getElementById('new-zona').value,
+    stato:     document.getElementById('new-stato').value,
+  });
+
+  try {
+    showToast('Salvataggio in corso...');
+    await fetch(SCRIPT_URL + '?' + params.toString());
+    closeModal();
+    showToast('✓ Lead salvato! Aggiornamento entro 5 minuti.');
+    setTimeout(loadData, 8000);
+  } catch(e) {
+    showToast('Errore di connessione. Riprova.');
+  }
 }
 
 // ── UTILITÀ ───────────────────────────────────────────────────
