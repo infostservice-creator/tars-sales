@@ -497,7 +497,7 @@ nav {
 .rating-stars span.hover {
   color: #ffcc00;
 }
-.rating-color-red .rating-stars span.active { color: #e67e22; } /* arancione per 1-2 */
+.rating-color-red .rating-stars span.active { color: #e67e22; }
 .rating-color-yellow .rating-stars span.active { color: #f1c40f; }
 .rating-color-green .rating-stars span.active { color: #2ecc71; }
 
@@ -1153,7 +1153,8 @@ function openWhatsApp() {
   if (!currentLead || !currentLead.cellulare) return;
   let num = currentLead.cellulare.replace(/\D/g, '');
   if (!num.startsWith('39')) num = '39' + num;
-  window.open('https://web.whatsapp.com/send?phone=' + num, '_blank');
+  // Link universale: su mobile apre l'app WhatsApp (o Business se predefinita), su PC apre web
+  window.open('https://wa.me/' + num, '_blank');
 }
 
 function openMaps() {
