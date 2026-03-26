@@ -7,681 +7,113 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f5f4f0;
-  --surface: #ffffff;
-  --border: #e2e0d8;
-  --text: #1a1916;
-  --muted: #6b6960;
-  --accent: #1a4fd6;
-  --accent-light: #e8eefb;
-  --green: #2d7d4f;
-  --green-light: #e8f5ed;
-  --amber: #b45309;
-  --amber-light: #fef3c7;
-  --red: #c0392b;
-  --red-light: #fdecea;
-  --mono: 'DM Mono', monospace;
-  --sans: 'DM Sans', sans-serif;
-  --radius: 10px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --bg: #f5f4f0; --surface: #ffffff; --border: #e2e0d8; --text: #1a1916;
+  --muted: #6b6960; --accent: #1a4fd6; --accent-light: #e8eefb;
+  --green: #2d7d4f; --green-light: #e8f5ed; --amber: #b45309; --amber-light: #fef3c7;
+  --red: #c0392b; --red-light: #fdecea;
+  --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
+  --radius: 10px; --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--sans);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-/* NAV */
-nav {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 52px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.nav-brand {
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  letter-spacing: 0.05em;
-}
-
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.5; }
+nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 52px; position: sticky; top: 0; z-index: 100; }
+.nav-brand { font-family: var(--mono); font-size: 13px; font-weight: 500; letter-spacing: 0.05em; }
 .nav-brand span { color: var(--accent); }
-
-.nav-links {
-  display: flex;
-  gap: 4px;
-}
-
-.nav-link {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  border: none;
-  background: none;
-}
-
-.nav-link:hover, .nav-link.active {
-  background: var(--accent-light);
-  color: var(--accent);
-}
-
-.nav-sync {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--muted);
-  font-family: var(--mono);
-}
-
-.sync-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* LAYOUT */
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px 16px;
-}
-
-/* SECTION */
-.section { display: none; }
-.section.active { display: block; }
-
-/* BUDGET BAR */
-.budget-bar-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow);
-}
-
-.budget-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
-}
-
-.budget-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-family: var(--mono);
-}
-
-.budget-numbers {
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.budget-numbers strong {
-  color: var(--text);
-  font-size: 15px;
-}
-
-.budget-track {
-  height: 8px;
-  background: var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.budget-fill {
-  height: 100%;
-  border-radius: 4px;
-  background: var(--green);
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.budget-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--muted);
-  font-family: var(--mono);
-}
-
-.budget-meta .giorni {
-  color: var(--amber);
-  font-weight: 500;
-}
-
-/* KPI GRID */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-@media (max-width: 700px) {
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-.kpi-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  box-shadow: var(--shadow);
-}
-
-.kpi-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-family: var(--mono);
-  margin-bottom: 6px;
-}
-
-.kpi-value {
-  font-size: 24px;
-  font-weight: 600;
-  font-family: var(--mono);
-  color: var(--text);
-  line-height: 1;
-}
-
-.kpi-sub {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 4px;
-}
-
-/* MAIN GRID */
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-@media (max-width: 700px) {
-  .main-grid { grid-template-columns: 1fr; }
-}
-
-/* CARD */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.card-header {
-  padding: 14px 16px 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-}
-
-.card-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  font-family: var(--mono);
-}
-
-.btn-add {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 5px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: opacity 0.15s;
-  font-family: var(--sans);
-}
-
-.btn-add:hover { opacity: 0.85; }
-
-/* SEARCH & FILTER */
-.search-bar {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  gap: 8px;
-}
-
-.search-input {
-  flex: 1;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 13px;
-  font-family: var(--sans);
-  color: var(--text);
-  background: var(--bg);
-  outline: none;
-}
-
+.nav-links { display: flex; gap: 4px; }
+.nav-link { padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s; border: none; background: none; }
+.nav-link:hover, .nav-link.active { background: var(--accent-light); color: var(--accent); }
+.nav-sync { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); font-family: var(--mono); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.container { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
+.section { display: none; } .section.active { display: block; }
+.budget-bar-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.budget-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.budget-label { font-size: 12px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-family: var(--mono); }
+.budget-numbers { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.budget-numbers strong { color: var(--text); font-size: 15px; }
+.budget-track { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.budget-fill { height: 100%; border-radius: 4px; background: var(--green); transition: width .8s cubic-bezier(.4,0,.2,1); }
+.budget-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--muted); font-family: var(--mono); }
+.budget-meta .giorni { color: var(--amber); font-weight: 500; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 16px; }
+@media(max-width:700px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+.kpi-label { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-family: var(--mono); margin-bottom: 6px; }
+.kpi-value { font-size: 24px; font-weight: 600; font-family: var(--mono); color: var(--text); line-height: 1; }
+.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:700px){.main-grid{grid-template-columns:1fr}}
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.card-header { padding: 14px 16px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+.card-title { font-size: 13px; font-weight: 500; font-family: var(--mono); }
+.btn-add { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer; transition: opacity .15s; }
+.btn-add:hover { opacity: .85; }
+.search-bar { padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; }
+.search-input { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 13px; color: var(--text); background: var(--bg); outline: none; min-width: 100px; }
 .search-input:focus { border-color: var(--accent); }
-
-.filter-select {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 12px;
-  font-family: var(--sans);
-  color: var(--muted);
-  background: var(--bg);
-  outline: none;
-  cursor: pointer;
-}
-
-/* LEAD LIST */
-.lead-list {
-  max-height: 380px;
-  overflow-y: auto;
-}
-
-.lead-item {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-  transition: background 0.1s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.lead-item:hover { background: var(--bg); }
-.lead-item:last-child { border-bottom: none; }
-
+.filter-select { border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 12px; color: var(--muted); background: var(--bg); outline: none; cursor: pointer; }
+.lead-list { max-height: 380px; overflow-y: auto; }
+.lead-item { padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .1s; display: flex; justify-content: space-between; align-items: center; }
+.lead-item:hover { background: var(--bg); } .lead-item:last-child { border-bottom: none; }
 .lead-info { flex: 1; }
-
-.lead-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.lead-company {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 1px;
-}
-
-.lead-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.badge {
-  font-size: 10px;
-  font-weight: 500;
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-family: var(--mono);
-  white-space: nowrap;
-}
-
+.lead-name { font-size: 13px; font-weight: 500; }
+.lead-company { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.lead-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; font-family: var(--mono); white-space: nowrap; }
 .badge-nuovo     { background: var(--accent-light); color: var(--accent); }
 .badge-trattativa{ background: var(--amber-light); color: var(--amber); }
 .badge-cliente   { background: var(--green-light); color: var(--green); }
 .badge-giri      { background: #f3f0ff; color: #6d3fca; }
 .badge-offerta   { background: #fff0f6; color: #c2185b; }
-
-.lead-followup {
-  font-size: 10px;
-  color: var(--muted);
-  font-family: var(--mono);
-}
-
-/* PIPELINE ZONE */
-.pipeline-section {
-  padding: 14px 16px;
-}
-
-.pipeline-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-}
-
+.badge-archivio  { background: #f0f0f0; color: #666; }
+.lead-followup { font-size: 10px; color: var(--muted); font-family: var(--mono); }
+.pipeline-section { padding: 14px 16px; }
+.pipeline-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
 .pipeline-row:last-child { border-bottom: none; }
-
-.pipeline-zona { font-size: 13px; font-weight: 500; }
-.pipeline-val { font-family: var(--mono); font-size: 13px; color: var(--accent); }
-.pipeline-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-/* SCHEDA CLIENTE */
-.scheda-wrap {
-  display: none;
-  grid-column: 1 / -1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
+.pipeline-zona { font-size: 13px; font-weight: 500; } .pipeline-val { font-family: var(--mono); font-size: 13px; color: var(--accent); } .pipeline-count { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.scheda-wrap { display: none; grid-column: 1/-1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
 .scheda-wrap.visible { display: block; }
-
-.scheda-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg);
-}
-
-.scheda-name { font-size: 18px; font-weight: 600; }
-.scheda-company { font-size: 13px; color: var(--muted); margin-top: 2px; }
-
+.scheda-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg); flex-wrap: wrap; gap: 8px; }
+.scheda-name { font-size: 18px; font-weight: 600; } .scheda-company { font-size: 13px; color: var(--muted); margin-top: 2px; }
 .scheda-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-.btn-action {
-  border: 1px solid var(--border);
-  background: var(--surface);
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: var(--sans);
-  color: var(--text);
-  transition: all 0.15s;
-}
-
+.btn-action { border: 1px solid var(--border); background: var(--surface); border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--text); transition: all .15s; }
 .btn-action:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
+.btn-modifica { border-color: var(--accent); color: var(--accent); }
 .btn-close { color: var(--muted); }
-
-.btn-modifica {
-  background: none;
-  border: 1px solid #aaa;
-  color: #555;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.15s;
-}
-.btn-modifica:hover {
-  background-color: #f0f0f0;
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.btn-foto {
-  background: none;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.15s;
-}
-.btn-foto:hover {
-  background-color: var(--accent-light);
-}
-
-.scheda-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-}
-
-@media (max-width: 700px) {
-  .scheda-body { grid-template-columns: 1fr; }
-}
-
-.scheda-info { padding: 16px 20px; border-right: 1px solid var(--border); }
-.scheda-note { padding: 16px 20px; }
-
-.info-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-  font-size: 13px;
-}
-
-.info-label {
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 11px;
-  min-width: 80px;
-  padding-top: 1px;
-}
-
+.scheda-body { display: grid; grid-template-columns: 1fr 1fr; }
+@media(max-width:700px){.scheda-body{grid-template-columns:1fr}}
+.scheda-info { padding: 16px 20px; border-right: 1px solid var(--border); } .scheda-note { padding: 16px 20px; }
+.info-row { display: flex; gap: 8px; margin-bottom: 10px; font-size: 13px; align-items: center; }
+.info-label { color: var(--muted); font-family: var(--mono); font-size: 11px; min-width: 80px; }
 .info-val { color: var(--text); font-weight: 500; }
-
-.foto-container {
-  margin-top: 12px;
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
-}
-.foto-thumb {
-  max-width: 100%;
-  max-height: 150px;
-  border-radius: 8px;
-  margin-top: 6px;
-}
-.foto-link {
-  display: inline-block;
-  margin-top: 6px;
-  font-size: 11px;
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.rating-stars {
-  display: inline-flex;
-  gap: 4px;
-  cursor: pointer;
-  font-size: 18px;
-}
-.rating-stars span {
-  color: #ccc;
-  transition: color 0.1s;
-}
-.rating-stars span.active {
-  color: gold;
-}
-.rating-stars span.hover {
-  color: #ffcc00;
-}
-
-.stato-select {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 12px;
-  font-family: var(--sans);
-  color: var(--text);
-  background: var(--bg);
-  cursor: pointer;
-  outline: none;
-}
-
+.rating-show { display: flex; gap: 2px; }
+.rating-show span { font-size: 16px; color: #ddd; } .rating-show span.on { color: #f5a623; }
+.stato-select { border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 12px; color: var(--text); background: var(--bg); cursor: pointer; outline: none; }
 .stato-select:focus { border-color: var(--accent); }
-
-/* FORM ATTIVITÀ */
-.form-title {
-  font-size: 13px;
-  font-weight: 500;
-  font-family: var(--mono);
-  margin-bottom: 12px;
-  color: var(--text);
-}
-
+.form-title { font-size: 13px; font-weight: 500; font-family: var(--mono); margin-bottom: 12px; }
 .form-group { margin-bottom: 10px; }
-
-.form-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-family: var(--mono);
-  display: block;
-  margin-bottom: 4px;
-}
-
-.form-control {
-  width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 7px 10px;
-  font-size: 13px;
-  font-family: var(--sans);
-  color: var(--text);
-  background: var(--bg);
-  outline: none;
-  transition: border-color 0.15s;
-}
-
+.form-label { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-family: var(--mono); display: block; margin-bottom: 4px; }
+.form-control { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 13px; color: var(--text); background: var(--bg); outline: none; transition: border-color .15s; }
 .form-control:focus { border-color: var(--accent); }
-
 textarea.form-control { resize: vertical; min-height: 80px; }
-
-.btn-save {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  font-family: var(--sans);
-  transition: opacity 0.15s;
-}
-
-.btn-save:hover { opacity: 0.85; }
-
-/* MODAL NUOVO LEAD */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
+.btn-save { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; transition: opacity .15s; }
+.btn-save:hover { opacity: .85; }
+.star-pick { display: flex; gap: 4px; cursor: pointer; margin-bottom: 4px; }
+.star-pick span { font-size: 22px; color: #ddd; transition: color .1s; line-height: 1; }
+.star-pick span.on { color: #f5a623; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
 .modal-overlay.open { display: flex; }
-
-.modal {
-  background: var(--surface);
-  border-radius: 14px;
-  width: 100%;
-  max-width: 480px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-}
-
-.modal-header {
-  padding: 18px 20px 14px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
+.modal { background: var(--surface); border-radius: 14px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
+.modal-header { padding: 18px 20px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .modal-title { font-size: 15px; font-weight: 600; }
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: var(--muted);
-  cursor: pointer;
-  line-height: 1;
-}
-
+.modal-close { background: none; border: none; font-size: 18px; color: var(--muted); cursor: pointer; }
 .modal-body { padding: 16px 20px 20px; }
-
-/* LOADING / EMPTY */
-.loading {
-  padding: 32px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 13px;
-  font-family: var(--mono);
-}
-
-.empty {
-  padding: 32px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-/* TOAST */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: #1a1916;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: var(--mono);
-  z-index: 999;
-  transition: transform 0.3s ease;
-  pointer-events: none;
-}
+.loading { padding: 32px; text-align: center; color: var(--muted); font-size: 13px; font-family: var(--mono); }
+.empty { padding: 32px; text-align: center; color: var(--muted); font-size: 13px; }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1916; color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-family: var(--mono); z-index: 999; transition: transform .3s ease; pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
-
-@media (max-width: 500px) {
-  .nav-link { padding: 6px 8px; font-size: 12px; }
-  .nav-sync { display: none; }
-}
+@media(max-width:500px){.nav-link{padding:6px 8px;font-size:12px}.nav-sync{display:none}}
 </style>
 </head>
 <body>
@@ -689,70 +121,40 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 <nav>
   <div class="nav-brand">TARS<span>·</span>Sales</div>
   <div class="nav-links">
-    <button class="nav-link active" onclick="showSection('home', this)">Home</button>
-    <button class="nav-link" onclick="showSection('lead', this)">Lead</button>
+    <button class="nav-link active" onclick="showSection('home',this)">Home</button>
+    <button class="nav-link" onclick="showSection('lead',this)">Lead</button>
   </div>
-  <div class="nav-sync">
-    <div class="sync-dot"></div>
-    <span id="sync-time">—</span>
-  </div>
+  <div class="nav-sync"><div class="sync-dot"></div><span id="sync-time">—</span></div>
 </nav>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- HOME SECTION -->
+<!-- HOME -->
 <div id="section-home" class="section active">
 <div class="container">
 
-  <!-- BUDGET BAR -->
   <div class="budget-bar-wrap">
     <div class="budget-header">
       <span class="budget-label">Budget annuale 2026</span>
       <span class="budget-numbers"><strong id="budget-euro">€0</strong> / €320.000</span>
     </div>
-    <div class="budget-track">
-      <div class="budget-fill" id="budget-fill" style="width:0%"></div>
-    </div>
+    <div class="budget-track"><div class="budget-fill" id="budget-fill" style="width:0%"></div></div>
     <div class="budget-meta">
       <span id="budget-pct">0% raggiunto</span>
       <span class="giorni" id="giorni-rimasti">— giorni alla fine anno</span>
     </div>
   </div>
 
-  <!-- KPI -->
   <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-label">Lead totali</div>
-      <div class="kpi-value" id="kpi-totali">—</div>
-      <div class="kpi-sub">nel CRM</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Trattative</div>
-      <div class="kpi-value" id="kpi-trattative">—</div>
-      <div class="kpi-sub">attive</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Pipeline €</div>
-      <div class="kpi-value" id="kpi-pipeline">—</div>
-      <div class="kpi-sub">trattative aperte</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Follow-up oggi</div>
-      <div class="kpi-value" id="kpi-followup">—</div>
-      <div class="kpi-sub">da contattare</div>
-    </div>
+    <div class="kpi-card"><div class="kpi-label">Lead totali</div><div class="kpi-value" id="kpi-totali">—</div><div class="kpi-sub">nel CRM</div></div>
+    <div class="kpi-card"><div class="kpi-label">Trattative</div><div class="kpi-value" id="kpi-trattative">—</div><div class="kpi-sub">attive</div></div>
+    <div class="kpi-card"><div class="kpi-label">Pipeline €</div><div class="kpi-value" id="kpi-pipeline">—</div><div class="kpi-sub">trattative aperte</div></div>
+    <div class="kpi-card"><div class="kpi-label">Follow-up oggi</div><div class="kpi-value" id="kpi-followup">—</div><div class="kpi-sub">da contattare</div></div>
   </div>
 
-  <!-- MAIN GRID -->
   <div class="main-grid">
-
-    <!-- LISTA LEAD -->
     <div class="card">
-      <div class="card-header">
-        <span class="card-title">CRM Leads</span>
-        <button class="btn-add" onclick="openModal()">+ Nuovo</button>
-      </div>
+      <div class="card-header"><span class="card-title">CRM Leads</span><button class="btn-add" onclick="openModal()">+ Nuovo</button></div>
       <div class="search-bar">
         <input class="search-input" type="text" placeholder="Cerca nome o azienda..." id="search-input" oninput="filterLeads()">
         <select class="filter-select" id="filter-stato" onchange="filterLeads()">
@@ -765,33 +167,22 @@ textarea.form-control { resize: vertical; min-height: 80px; }
           <option value="Lead Archivio">Archivio</option>
         </select>
       </div>
-      <div class="lead-list" id="lead-list">
-        <div class="loading">Caricamento dati...</div>
-      </div>
+      <div class="lead-list" id="lead-list"><div class="loading">Caricamento dati...</div></div>
     </div>
 
-    <!-- PIPELINE PER ZONA -->
     <div class="card">
-      <div class="card-header">
-        <span class="card-title">Pipeline per zona</span>
-      </div>
-      <div class="pipeline-section" id="pipeline-zone">
-        <div class="loading">Caricamento...</div>
-      </div>
+      <div class="card-header"><span class="card-title">Pipeline per zona</span></div>
+      <div class="pipeline-section" id="pipeline-zone"><div class="loading">Caricamento...</div></div>
     </div>
 
-    <!-- SCHEDA CLIENTE -->
     <div class="scheda-wrap" id="scheda-wrap">
       <div class="scheda-header">
-        <div>
-          <div class="scheda-name" id="scheda-nome">—</div>
-          <div class="scheda-company" id="scheda-azienda">—</div>
-        </div>
+        <div><div class="scheda-name" id="scheda-nome">—</div><div class="scheda-company" id="scheda-azienda">—</div></div>
         <div class="scheda-actions">
           <button class="btn-action" onclick="openWhatsApp()">WhatsApp</button>
           <button class="btn-action" onclick="openMaps()">Maps</button>
+          <button class="btn-action btn-modifica" onclick="apriModifica()">✏️ Modifica</button>
           <button class="btn-action btn-close" onclick="closeScheda()">Chiudi</button>
-          <button class="btn-modifica" onclick="apriModificaLead()">✏️ Modifica</button>
         </div>
       </div>
       <div class="scheda-body">
@@ -805,24 +196,13 @@ textarea.form-control { resize: vertical; min-height: 80px; }
           <div class="info-row"><span class="info-label">Valore €</span><span class="info-val" id="s-val">—</span></div>
           <div class="info-row"><span class="info-label">Zona</span><span class="info-val" id="s-zona">—</span></div>
           <div class="info-row"><span class="info-label">Follow-up</span><span class="info-val" id="s-followup">—</span></div>
-          <div class="info-row"><span class="info-label">Rating</span>
-            <div class="info-val" id="s-rating"></div>
-          </div>
+          <div class="info-row"><span class="info-label">Rating</span><div class="rating-show" id="s-rating"></div></div>
           <div class="info-row">
             <span class="info-label">Stato</span>
             <select class="stato-select" id="s-stato" onchange="cambiaStato(this.value)">
-              <option>Nuovo Lead</option>
-              <option>Trattativa</option>
-              <option>Offerta Inviata</option>
-              <option>Cliente</option>
-              <option>Giri da Organizzare</option>
-              <option>Lead Archivio</option>
+              <option>Nuovo Lead</option><option>Trattativa</option><option>Offerta Inviata</option>
+              <option>Cliente</option><option>Giri da Organizzare</option><option>Lead Archivio</option>
             </select>
-          </div>
-          <!-- Sezione foto -->
-          <div class="foto-container">
-            <button class="btn-foto" onclick="caricaFoto()">📸 Carica biglietto</button>
-            <div id="foto-preview" style="margin-top: 8px;"></div>
           </div>
         </div>
         <div class="scheda-note">
@@ -830,11 +210,8 @@ textarea.form-control { resize: vertical; min-height: 80px; }
           <div class="form-group">
             <label class="form-label">Tipo contatto</label>
             <select class="form-control" id="act-tipo">
-              <option value="Visita">Visita</option>
-              <option value="Telefonata">Telefonata</option>
-              <option value="WhatsApp">WhatsApp</option>
-              <option value="Email">Email</option>
-              <option value="Demo">Demo</option>
+              <option value="Visita">Visita</option><option value="Telefonata">Telefonata</option>
+              <option value="WhatsApp">WhatsApp</option><option value="Email">Email</option><option value="Demo">Demo</option>
             </select>
           </div>
           <div class="form-group">
@@ -845,45 +222,34 @@ textarea.form-control { resize: vertical; min-height: 80px; }
         </div>
       </div>
     </div>
-
   </div>
 </div>
 </div>
 
-<!-- LEAD SECTION -->
+<!-- LEAD -->
 <div id="section-lead" class="section">
 <div class="container">
   <div class="card">
-    <div class="card-header">
-      <span class="card-title">Tutti i lead</span>
-      <button class="btn-add" onclick="openModal()">+ Nuovo lead</button>
-    </div>
+    <div class="card-header"><span class="card-title">Tutti i lead</span><button class="btn-add" onclick="openModal()">+ Nuovo lead</button></div>
     <div class="search-bar">
       <input class="search-input" type="text" placeholder="Cerca..." id="search-lead2" oninput="filterLeads2()">
       <select class="filter-select" id="filter-stato2" onchange="filterLeads2()">
         <option value="">Tutti gli stati</option>
-        <option value="Nuovo Lead">Nuovo Lead</option>
-        <option value="Trattativa">Trattativa</option>
-        <option value="Offerta Inviata">Offerta Inviata</option>
-        <option value="Cliente">Cliente</option>
-        <option value="Giri da Organizzare">Giri da Organizzare</option>
-        <option value="Lead Archivio">Lead Archivio</option>
+        <option value="Nuovo Lead">Nuovo Lead</option><option value="Trattativa">Trattativa</option>
+        <option value="Offerta Inviata">Offerta Inviata</option><option value="Cliente">Cliente</option>
+        <option value="Giri da Organizzare">Giri da Organizzare</option><option value="Lead Archivio">Lead Archivio</option>
       </select>
       <select class="filter-select" id="filter-zona" onchange="filterLeads2()">
         <option value="">Tutte le zone</option>
-        <option value="Marche">Marche</option>
-        <option value="Provincia di Perugia">Perugia</option>
-        <option value="Provincia di Rimini">Rimini</option>
+        <option value="Marche">Marche</option><option value="Provincia di Perugia">Perugia</option><option value="Provincia di Rimini">Rimini</option>
       </select>
     </div>
-    <div class="lead-list" id="lead-list2" style="max-height: 600px;">
-      <div class="loading">Caricamento dati...</div>
-    </div>
+    <div class="lead-list" id="lead-list2" style="max-height:600px"><div class="loading">Caricamento dati...</div></div>
   </div>
 </div>
 </div>
 
-<!-- MODAL NUOVO LEAD (usato anche per modifica) -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-header">
@@ -891,114 +257,69 @@ textarea.form-control { resize: vertical; min-height: 80px; }
       <button class="modal-close" onclick="closeModal()">×</button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Nome e Cognome *</label>
-        <input class="form-control" id="new-nome" type="text" placeholder="Mario Rossi">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Azienda</label>
-        <input class="form-control" id="new-azienda" type="text" placeholder="Studio XYZ">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Cellulare</label>
-        <input class="form-control" id="new-cell" type="tel" placeholder="+39 333 1234567">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-control" id="new-email" type="email" placeholder="email@esempio.it">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Indirizzo</label>
-        <input class="form-control" id="new-indirizzo" type="text" placeholder="Via Roma 1, Ancona">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="form-group">
-          <label class="form-label">Comune</label>
-          <input class="form-control" id="new-comune" type="text">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Provincia</label>
-          <input class="form-control" id="new-prov" type="text" placeholder="AN">
-        </div>
+      <div class="form-group"><label class="form-label">Nome e Cognome *</label><input class="form-control" id="new-nome" type="text" placeholder="Mario Rossi"></div>
+      <div class="form-group"><label class="form-label">Azienda</label><input class="form-control" id="new-azienda" type="text" placeholder="Studio XYZ"></div>
+      <div class="form-group"><label class="form-label">Cellulare</label><input class="form-control" id="new-cell" type="tel" placeholder="+39 333 1234567"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-control" id="new-email" type="email" placeholder="email@esempio.it"></div>
+      <div class="form-group"><label class="form-label">Indirizzo</label><input class="form-control" id="new-indirizzo" type="text" placeholder="Via Roma 1, Ancona"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="form-group"><label class="form-label">Comune</label><input class="form-control" id="new-comune" type="text"></div>
+        <div class="form-group"><label class="form-label">Provincia</label><input class="form-control" id="new-prov" type="text" placeholder="AN"></div>
       </div>
       <div class="form-group">
         <label class="form-label">Categoria strumenti</label>
         <select class="form-control" id="new-cat">
           <option value="">Seleziona...</option>
-          <option>Laser Scanner Statico</option>
-          <option>Mobile SLAM</option>
-          <option>GNSS Receiver</option>
-          <option>Drone Survey</option>
-          <option>USV / Batimetria</option>
-          <option>Scan-to-BIM Software</option>
-          <option>Total Station</option>
-          <option>Accessori e Consumabili</option>
+          <option>Laser Scanner Statico</option><option>Mobile SLAM</option><option>GNSS Receiver</option>
+          <option>Drone Survey</option><option>USV / Batimetria</option><option>Scan-to-BIM Software</option>
+          <option>Total Station</option><option>Accessori e Consumabili</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Modello di interesse</label>
-        <input class="form-control" id="new-modello" type="text" placeholder="Es: NavVis VLX 3">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div class="form-group">
-          <label class="form-label">Valore stimato €</label>
-          <input class="form-control" id="new-valore" type="number" placeholder="0">
-        </div>
+      <div class="form-group"><label class="form-label">Modello di interesse</label><input class="form-control" id="new-modello" type="text" placeholder="Es: NavVis VLX 3"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="form-group"><label class="form-label">Valore stimato €</label><input class="form-control" id="new-valore" type="number" placeholder="0"></div>
         <div class="form-group">
           <label class="form-label">Zona</label>
           <select class="form-control" id="new-zona">
-            <option value="Marche">Marche</option>
-            <option value="Provincia di Perugia">Provincia di Perugia</option>
-            <option value="Provincia di Rimini">Provincia di Rimini</option>
+            <option value="Marche">Marche</option><option value="Provincia di Perugia">Provincia di Perugia</option><option value="Provincia di Rimini">Provincia di Rimini</option>
           </select>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Rating</label>
-        <div class="rating-stars" id="rating-selector">
-          <span data-value="1">★</span>
-          <span data-value="2">★</span>
-          <span data-value="3">★</span>
-          <span data-value="4">★</span>
-          <span data-value="5">★</span>
+        <div class="star-pick" id="star-pick">
+          <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
         </div>
         <input type="hidden" id="new-rating" value="3">
       </div>
       <div class="form-group">
         <label class="form-label">Stato iniziale</label>
         <select class="form-control" id="new-stato">
-          <option value="Nuovo Lead">Nuovo Lead</option>
-          <option value="Trattativa">Trattativa</option>
-          <option value="Cliente">Cliente</option>
-          <option value="Giri da Organizzare">Giri da Organizzare</option>
+          <option value="Nuovo Lead">Nuovo Lead</option><option value="Trattativa">Trattativa</option>
+          <option value="Cliente">Cliente</option><option value="Giri da Organizzare">Giri da Organizzare</option>
           <option value="Lead Archivio">Lead Archivio</option>
         </select>
       </div>
-      <button class="btn-save" id="btn-salva-lead" onclick="salvaLead()">Salva lead</button>
+      <input type="hidden" id="modal-mode" value="nuovo">
+      <input type="hidden" id="modal-riga" value="">
+      <button class="btn-save" id="btn-salva" onclick="salvaLead()">Salva lead</button>
     </div>
   </div>
 </div>
 
 <script>
-// ── CONFIGURAZIONE ────────────────────────────────────────────
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrKTYzvu36sJtoefND_K5eSrN5NdWd49ufDFQZsljQNUMW-FXMral8yEE1YHTiyNzT/exec';
+// ── URL ORIGINALE (quello che funzionava) ─────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyE9P1O6dY6r0kYSb8wi1sxxk1OBuLcBQmz0ylZIDaE6OVIASs3E8woMkXP7D7c5z_/exec';
 const BUDGET = 320000;
-const DRIVE_FOLDER_ID = '1FyNL7pQkGI2b8723YrtzD0zLostqZvJE'; // ID della cartella Drive
 
 let allLeads = [];
 let currentLead = null;
-let leadInModifica = null;
 
 const BADGE = {
-  'Nuovo Lead'         : 'badge-nuovo',
-  'Trattativa'         : 'badge-trattativa',
-  'Offerta Inviata'    : 'badge-offerta',
-  'Cliente'            : 'badge-cliente',
-  'Giri da Organizzare': 'badge-giri',
-  'Lead Archivio'      : 'badge-giri',
+  'Nuovo Lead':'badge-nuovo','Trattativa':'badge-trattativa','Offerta Inviata':'badge-offerta',
+  'Cliente':'badge-cliente','Giri da Organizzare':'badge-giri','Lead Archivio':'badge-archivio'
 };
 
-// ── NAVIGAZIONE ───────────────────────────────────────────────
 function showSection(name, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
@@ -1006,242 +327,165 @@ function showSection(name, btn) {
   if (btn) btn.classList.add('active');
 }
 
-// ── TOAST ─────────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// ── CARICAMENTO DATI ──────────────────────────────────────────
 async function loadData() {
   try {
-    const res = await fetch(SCRIPT_URL + '?action=getLeads', { method: 'GET' });
+    const res = await fetch(SCRIPT_URL + '?action=getLeads');
     const data = await res.json();
     if (data && data.leads) {
       allLeads = data.leads;
       renderAll();
       document.getElementById('sync-time').textContent =
-        new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+        new Date().toLocaleTimeString('it-IT', {hour:'2-digit',minute:'2-digit'});
     }
   } catch(e) {
-    console.error('Errore caricamento dati:', e);
-    document.getElementById('lead-list').innerHTML =
-      '<div class="empty">Errore connessione. Riprova tra qualche secondo.</div>';
-    document.getElementById('lead-list2').innerHTML =
-      '<div class="empty">Errore connessione.</div>';
+    console.error('Errore:', e);
+    document.getElementById('lead-list').innerHTML = '<div class="empty">Errore connessione. Riprova tra qualche secondo.</div>';
+    document.getElementById('lead-list2').innerHTML = '<div class="empty">Errore connessione.</div>';
+    document.getElementById('pipeline-zone').innerHTML = '<div class="empty">Nessun dato disponibile</div>';
   }
 }
 
-// ── RENDER GENERALE ───────────────────────────────────────────
 function renderAll() {
-  updateGiorni();
-  updateBudgetBar();
-  renderKPI();
+  updateGiorni(); updateBudgetBar(); renderKPI();
   renderLeadList('lead-list', allLeads);
   renderLeadList('lead-list2', allLeads);
   renderPipelineZone();
 }
 
 function updateGiorni() {
-  const oggi = new Date();
-  const fineAnno = new Date(oggi.getFullYear(), 11, 31);
-  const diff = Math.ceil((fineAnno - oggi) / (1000 * 60 * 60 * 24));
+  const diff = Math.ceil((new Date(new Date().getFullYear(),11,31) - new Date()) / 86400000);
   document.getElementById('giorni-rimasti').textContent = diff + ' giorni alla fine anno';
 }
 
 function updateBudgetBar() {
-  const venduto = allLeads
-    .filter(l => l.stato === 'Cliente')
-    .reduce((sum, l) => sum + (parseFloat(l.valore) || 0), 0);
-
-  const pct = Math.min(Math.round((venduto / BUDGET) * 100), 100);
+  const venduto = allLeads.filter(l => l.stato === 'Cliente').reduce((s,l) => s + (parseFloat(l.valore)||0), 0);
+  const pct = Math.min(Math.round(venduto/BUDGET*100), 100);
   document.getElementById('budget-fill').style.width = pct + '%';
   document.getElementById('budget-pct').textContent = pct + '% raggiunto';
   document.getElementById('budget-euro').textContent = '€' + venduto.toLocaleString('it-IT');
 }
 
 function renderKPI() {
-  const totali = allLeads.length;
-  const trattative = allLeads.filter(l =>
-    l.stato === 'Trattativa' || l.stato === 'Offerta Inviata'
-  ).length;
-
-  const pipeline = allLeads
-    .filter(l => l.stato === 'Trattativa' || l.stato === 'Offerta Inviata')
-    .reduce((sum, l) => sum + (parseFloat(l.valore) || 0), 0);
-
+  const trattative = allLeads.filter(l => l.stato==='Trattativa'||l.stato==='Offerta Inviata');
+  const pipeline = trattative.reduce((s,l) => s+(parseFloat(l.valore)||0), 0);
   const oggiStr = new Date().toISOString().split('T')[0];
   const followup = allLeads.filter(l => {
     if (!l.followup) return false;
-    try {
-      return new Date(l.followup).toISOString().split('T')[0] <= oggiStr;
-    } catch(e) { return false; }
+    try { return new Date(l.followup).toISOString().split('T')[0] <= oggiStr; } catch(e){return false;}
   }).length;
-
-  document.getElementById('kpi-totali').textContent = totali;
-  document.getElementById('kpi-trattative').textContent = trattative;
-  document.getElementById('kpi-pipeline').textContent =
-    pipeline > 0 ? '€' + pipeline.toLocaleString('it-IT') : '€0';
+  document.getElementById('kpi-totali').textContent = allLeads.length;
+  document.getElementById('kpi-trattative').textContent = trattative.length;
+  document.getElementById('kpi-pipeline').textContent = pipeline>0 ? '€'+pipeline.toLocaleString('it-IT') : '€0';
   document.getElementById('kpi-followup').textContent = followup;
 }
 
-function renderLeadList(containerId, leads) {
-  const el = document.getElementById(containerId);
-  if (!leads || leads.length === 0) {
-    el.innerHTML = '<div class="empty">Nessun lead trovato</div>';
-    return;
-  }
-  el.innerHTML = leads.map((l, i) => `
-    <div class="lead-item" onclick="openScheda(${allLeads.indexOf(l)})">
+function renderLeadList(id, leads) {
+  const el = document.getElementById(id);
+  if (!leads || !leads.length) { el.innerHTML = '<div class="empty">Nessun lead trovato</div>'; return; }
+  el.innerHTML = leads.map(l => {
+    const i = allLeads.indexOf(l);
+    return `<div class="lead-item" onclick="openScheda(${i})">
       <div class="lead-info">
-        <div class="lead-name">${l.nome || '—'}</div>
-        <div class="lead-company">${l.azienda || ''}${l.comune ? ' · ' + l.comune : ''}</div>
+        <div class="lead-name">${l.nome||'—'}</div>
+        <div class="lead-company">${l.azienda||''}${l.comune?' · '+l.comune:''}</div>
       </div>
       <div class="lead-right">
-        <span class="badge ${BADGE[l.stato] || 'badge-nuovo'}">${l.stato || 'Nuovo Lead'}</span>
-        ${l.followup ? `<span class="lead-followup">${formatDate(l.followup)}</span>` : ''}
+        <span class="badge ${BADGE[l.stato]||'badge-nuovo'}">${l.stato||'Nuovo Lead'}</span>
+        ${l.followup?`<span class="lead-followup">${formatDate(l.followup)}</span>`:''}
       </div>
-    </div>
-  `).join('');
-}
-
-function renderPipelineZone() {
-  const zone = ['Marche', 'Provincia di Perugia', 'Provincia di Rimini'];
-  const el = document.getElementById('pipeline-zone');
-
-  if (allLeads.length === 0) {
-    el.innerHTML = '<div class="empty">Nessun dato disponibile</div>';
-    return;
-  }
-
-  el.innerHTML = zone.map(z => {
-    const leads = allLeads.filter(l => l.zona === z);
-    const trat  = leads.filter(l => l.stato === 'Trattativa' || l.stato === 'Offerta Inviata');
-    const val   = trat.reduce((s, l) => s + (parseFloat(l.valore) || 0), 0);
-    return `
-      <div class="pipeline-row">
-        <div>
-          <div class="pipeline-zona">${z}</div>
-          <div class="pipeline-count">${leads.length} lead · ${trat.length} trattative</div>
-        </div>
-        <div class="pipeline-val">${val > 0 ? '€' + val.toLocaleString('it-IT') : '—'}</div>
-      </div>
-    `;
+    </div>`;
   }).join('');
 }
 
-// ── FILTRI ────────────────────────────────────────────────────
+function renderPipelineZone() {
+  const zone = ['Marche','Provincia di Perugia','Provincia di Rimini'];
+  const el = document.getElementById('pipeline-zone');
+  if (!allLeads.length) { el.innerHTML='<div class="empty">Nessun dato disponibile</div>'; return; }
+  el.innerHTML = zone.map(z => {
+    const leads = allLeads.filter(l => l.zona===z);
+    const trat = leads.filter(l => l.stato==='Trattativa'||l.stato==='Offerta Inviata');
+    const val = trat.reduce((s,l) => s+(parseFloat(l.valore)||0), 0);
+    return `<div class="pipeline-row">
+      <div><div class="pipeline-zona">${z}</div><div class="pipeline-count">${leads.length} lead · ${trat.length} trattative</div></div>
+      <div class="pipeline-val">${val>0?'€'+val.toLocaleString('it-IT'):'—'}</div>
+    </div>`;
+  }).join('');
+}
+
 function filterLeads() {
-  const q     = document.getElementById('search-input').value.toLowerCase();
+  const q = document.getElementById('search-input').value.toLowerCase();
   const stato = document.getElementById('filter-stato').value;
-  const filtered = allLeads.filter(l => {
-    const matchQ = !q || (l.nome||'').toLowerCase().includes(q) || (l.azienda||'').toLowerCase().includes(q);
-    const matchS = !stato || l.stato === stato;
-    return matchQ && matchS;
-  });
-  renderLeadList('lead-list', filtered);
+  renderLeadList('lead-list', allLeads.filter(l =>
+    (!q || (l.nome||'').toLowerCase().includes(q) || (l.azienda||'').toLowerCase().includes(q)) &&
+    (!stato || l.stato===stato)
+  ));
 }
 
 function filterLeads2() {
-  const q     = document.getElementById('search-lead2').value.toLowerCase();
+  const q = document.getElementById('search-lead2').value.toLowerCase();
   const stato = document.getElementById('filter-stato2').value;
-  const zona  = document.getElementById('filter-zona').value;
-  const filtered = allLeads.filter(l => {
-    const matchQ = !q || (l.nome||'').toLowerCase().includes(q) || (l.azienda||'').toLowerCase().includes(q);
-    const matchS = !stato || l.stato === stato;
-    const matchZ = !zona  || l.zona  === zona;
-    return matchQ && matchS && matchZ;
-  });
-  renderLeadList('lead-list2', filtered);
+  const zona = document.getElementById('filter-zona').value;
+  renderLeadList('lead-list2', allLeads.filter(l =>
+    (!q || (l.nome||'').toLowerCase().includes(q) || (l.azienda||'').toLowerCase().includes(q)) &&
+    (!stato || l.stato===stato) && (!zona || l.zona===zona)
+  ));
 }
 
-// ── SCHEDA CLIENTE ────────────────────────────────────────────
 function openScheda(i) {
   const l = allLeads[i];
   if (!l) return;
-  currentLead = { ...l, _rowIndex: i + 2 };
-
-  document.getElementById('scheda-nome').textContent    = l.nome || '—';
-  document.getElementById('scheda-azienda').textContent = [l.azienda, l.comune].filter(Boolean).join(' · ') || '—';
-  document.getElementById('s-cell').textContent    = l.cellulare || '—';
-  document.getElementById('s-email').textContent   = l.email || '—';
-  document.getElementById('s-comune').textContent  = l.comune || '—';
-  document.getElementById('s-prov').textContent    = l.provincia || '—';
-  document.getElementById('s-cat').textContent     = l.categorie || '—';
-  document.getElementById('s-mod').textContent     = l.modelli || '—';
-  document.getElementById('s-val').textContent     = l.valore ? '€' + parseFloat(l.valore).toLocaleString('it-IT') : '—';
-  document.getElementById('s-zona').textContent    = l.zona || '—';
-  document.getElementById('s-followup').textContent= l.followup ? formatDate(l.followup) : '—';
-  document.getElementById('s-stato').value         = l.stato || 'Nuovo Lead';
-  // Rating
-  const ratingVal = l.rating ? parseInt(l.rating) : 3;
-  const ratingHtml = creaStelle(ratingVal, true);
-  document.getElementById('s-rating').innerHTML = ratingHtml;
-  // Foto
-  const fotoUrl = l.foto || '';
-  const fotoDiv = document.getElementById('foto-preview');
-  if (fotoUrl) {
-    fotoDiv.innerHTML = `
-      <img class="foto-thumb" src="${fotoUrl}" alt="Biglietto da visita">
-      <br><a class="foto-link" href="${fotoUrl}" target="_blank">Apri immagine</a>
-    `;
-  } else {
-    fotoDiv.innerHTML = '<div class="empty" style="padding:8px 0;">Nessuna foto caricata</div>';
-  }
-
+  currentLead = {...l, _rowIndex: i+2};
+  document.getElementById('scheda-nome').textContent = l.nome||'—';
+  document.getElementById('scheda-azienda').textContent = [l.azienda,l.comune].filter(Boolean).join(' · ')||'—';
+  document.getElementById('s-cell').textContent = l.cellulare||'—';
+  document.getElementById('s-email').textContent = l.email||'—';
+  document.getElementById('s-comune').textContent = l.comune||'—';
+  document.getElementById('s-prov').textContent = l.provincia||'—';
+  document.getElementById('s-cat').textContent = l.categorie||'—';
+  document.getElementById('s-mod').textContent = l.modelli||'—';
+  document.getElementById('s-val').textContent = l.valore ? '€'+parseFloat(l.valore).toLocaleString('it-IT') : '—';
+  document.getElementById('s-zona').textContent = l.zona||'—';
+  document.getElementById('s-followup').textContent = l.followup ? formatDate(l.followup) : '—';
+  document.getElementById('s-stato').value = l.stato||'Nuovo Lead';
+  const rv = parseInt(l.rating)||0;
+  document.getElementById('s-rating').innerHTML = [1,2,3,4,5].map(n=>`<span class="${n<=rv?'on':''}"}>★</span>`).join('');
   document.getElementById('scheda-wrap').classList.add('visible');
-  document.getElementById('scheda-wrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('scheda-wrap').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function closeScheda() {
-  document.getElementById('scheda-wrap').classList.remove('visible');
-  currentLead = null;
-}
+function closeScheda() { document.getElementById('scheda-wrap').classList.remove('visible'); currentLead=null; }
 
 function openWhatsApp() {
-  if (!currentLead || !currentLead.cellulare) return;
-  let num = currentLead.cellulare.replace(/\D/g, '');
-  if (!num.startsWith('39')) num = '39' + num;
-  window.open('https://wa.me/' + num, '_blank');
+  if (!currentLead?.cellulare) return;
+  let num = currentLead.cellulare.replace(/\D/g,'');
+  if (!num.startsWith('39')) num='39'+num;
+  window.open('https://wa.me/'+num,'_blank');
 }
 
 function openMaps() {
   if (!currentLead) return;
-  const addr = [currentLead.indirizzo, currentLead.comune, currentLead.provincia].filter(Boolean).join(', ');
+  const addr = [currentLead.indirizzo,currentLead.comune,currentLead.provincia].filter(Boolean).join(', ');
   if (!addr) return;
-  window.open('https://maps.google.com/?q=' + encodeURIComponent(addr), '_blank');
+  window.open('https://maps.google.com/?q='+encodeURIComponent(addr),'_blank');
 }
 
-// ── CAMBIO STATO (ora con POST) ───────────────────────────────
 async function cambiaStato(nuovoStato) {
   if (!currentLead) return;
   try {
     showToast('Aggiornamento stato...');
-    const formData = new FormData();
-    formData.append('action', 'cambiaStato');
-    formData.append('riga', currentLead._rowIndex);
-    formData.append('stato', nuovoStato);
-
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: formData
-    });
-    const result = await response.json();
-    if (result.status === 'ok') {
-      allLeads[currentLead._rowIndex - 2].stato = nuovoStato;
-      currentLead.stato = nuovoStato;
-      renderAll();
-      showToast('✓ Stato aggiornato a "' + nuovoStato + '"!');
-      setTimeout(loadData, 5000);
-    } else {
-      showToast('Errore: ' + (result.msg || 'Sconosciuto'));
-    }
-  } catch(e) {
-    console.error(e);
-    showToast('Errore di connessione. Riprova.');
-  }
+    await fetch(SCRIPT_URL+'?action=cambiaStato&riga='+currentLead._rowIndex+'&stato='+encodeURIComponent(nuovoStato));
+    allLeads[currentLead._rowIndex-2].stato = nuovoStato;
+    currentLead.stato = nuovoStato;
+    renderAll();
+    showToast('✓ Stato aggiornato a "'+nuovoStato+'"!');
+    setTimeout(loadData, 5000);
+  } catch(e) { showToast('Errore di connessione. Riprova.'); }
 }
 
 async function registraAttivita() {
@@ -1249,286 +493,110 @@ async function registraAttivita() {
   const tipo = document.getElementById('act-tipo').value;
   const nota = document.getElementById('act-nota').value.trim();
   if (!nota) { showToast('Inserisci una nota prima di salvare.'); return; }
-
   try {
-    const url = SCRIPT_URL
-      + '?riga=' + currentLead._rowIndex
-      + '&nota=' + encodeURIComponent('[' + tipo + '] ' + nota)
-      + '&data=' + new Date().toISOString();
-    await fetch(url);
-    document.getElementById('act-nota').value = '';
+    await fetch(SCRIPT_URL+'?riga='+currentLead._rowIndex+'&nota='+encodeURIComponent('['+tipo+'] '+nota)+'&data='+new Date().toISOString());
+    document.getElementById('act-nota').value='';
     showToast('✓ Attività registrata!');
-  } catch(e) {
-    showToast('Errore di connessione. Riprova.');
-  }
+  } catch(e) { showToast('Errore di connessione. Riprova.'); }
 }
 
-// ── RATING STELLE ─────────────────────────────────────────────
-function creaStelle(valore, soloVisualizzazione = false) {
-  const stelle = [];
-  for (let i = 1; i <= 5; i++) {
-    const attiva = i <= valore;
-    stelle.push(`<span class="${attiva ? 'active' : ''}" ${!soloVisualizzazione ? `data-value="${i}"` : ''}>★</span>`);
-  }
-  let html = `<div class="rating-stars">${stelle.join('')}</div>`;
-  if (!soloVisualizzazione) {
-    html += `<input type="hidden" id="new-rating" value="${valore}">`;
-  }
-  return html;
+// ── RATING ───────────────────────────────────────────────────
+function initStars() {
+  const pick = document.getElementById('star-pick');
+  if (!pick) return;
+  const stars = pick.querySelectorAll('span');
+  const hidden = document.getElementById('new-rating');
+  function set(v) { stars.forEach((s,i) => s.classList.toggle('on',i<v)); if(hidden) hidden.value=v; }
+  stars.forEach(s => s.addEventListener('click', () => set(parseInt(s.dataset.v))));
+  set(parseInt(hidden?.value||3));
 }
 
-function initRatingSelector() {
-  const container = document.getElementById('rating-selector');
-  if (!container) return;
-  const stars = container.querySelectorAll('span');
-  const inputHidden = document.getElementById('new-rating');
-  function setRating(val) {
-    stars.forEach((star, idx) => {
-      if (idx < val) star.classList.add('active');
-      else star.classList.remove('active');
-    });
-    if (inputHidden) inputHidden.value = val;
-  }
-  stars.forEach(star => {
-    star.addEventListener('click', () => {
-      const val = parseInt(star.getAttribute('data-value'));
-      setRating(val);
-    });
-    star.addEventListener('mouseenter', () => {
-      const val = parseInt(star.getAttribute('data-value'));
-      stars.forEach((s, idx) => {
-        if (idx < val) s.classList.add('hover');
-        else s.classList.remove('hover');
-      });
-    });
-  });
-  container.addEventListener('mouseleave', () => {
-    const currentVal = parseInt(inputHidden ? inputHidden.value : 3);
-    stars.forEach((star, idx) => {
-      if (idx < currentVal) star.classList.add('active');
-      else star.classList.remove('active');
-      star.classList.remove('hover');
-    });
-  });
-  setRating(parseInt(inputHidden ? inputHidden.value : 3));
-}
-
-// ── MODAL NUOVO LEAD & MODIFICA ──────────────────────────────
-function openModal(leadDaModificare = null) {
+// ── MODAL ─────────────────────────────────────────────────────
+function openModal(leadDaModificare) {
+  const hidden = document.getElementById('new-rating');
   if (leadDaModificare) {
-    leadInModifica = leadDaModificare;
-    document.getElementById('modal-title').innerText = '✏️ Modifica lead';
-    document.getElementById('btn-salva-lead').innerText = 'Salva modifiche';
-    document.getElementById('new-nome').value = leadDaModificare.nome || '';
-    document.getElementById('new-azienda').value = leadDaModificare.azienda || '';
-    document.getElementById('new-cell').value = leadDaModificare.cellulare || '';
-    document.getElementById('new-email').value = leadDaModificare.email || '';
-    document.getElementById('new-indirizzo').value = leadDaModificare.indirizzo || '';
-    document.getElementById('new-comune').value = leadDaModificare.comune || '';
-    document.getElementById('new-prov').value = leadDaModificare.provincia || '';
-    document.getElementById('new-cat').value = leadDaModificare.categorie || '';
-    document.getElementById('new-modello').value = leadDaModificare.modelli || '';
-    document.getElementById('new-valore').value = leadDaModificare.valore || '';
-    document.getElementById('new-zona').value = leadDaModificare.zona || 'Marche';
-    document.getElementById('new-stato').value = leadDaModificare.stato || 'Nuovo Lead';
-    // rating
-    const ratingVal = leadDaModificare.rating ? parseInt(leadDaModificare.rating) : 3;
-    const ratingContainer = document.getElementById('rating-selector');
-    if (ratingContainer) {
-      const stars = ratingContainer.querySelectorAll('span');
-      stars.forEach((star, idx) => {
-        if (idx < ratingVal) star.classList.add('active');
-        else star.classList.remove('active');
-      });
-      const hidden = document.getElementById('new-rating');
-      if (hidden) hidden.value = ratingVal;
-    }
+    document.getElementById('modal-title').textContent = '✏️ Modifica lead';
+    document.getElementById('btn-salva').textContent = 'Salva modifiche';
+    document.getElementById('modal-mode').value = 'modifica';
+    document.getElementById('modal-riga').value = leadDaModificare._rowIndex;
+    document.getElementById('new-nome').value      = leadDaModificare.nome||'';
+    document.getElementById('new-azienda').value   = leadDaModificare.azienda||'';
+    document.getElementById('new-cell').value      = leadDaModificare.cellulare||'';
+    document.getElementById('new-email').value     = leadDaModificare.email||'';
+    document.getElementById('new-indirizzo').value = leadDaModificare.indirizzo||'';
+    document.getElementById('new-comune').value    = leadDaModificare.comune||'';
+    document.getElementById('new-prov').value      = leadDaModificare.provincia||'';
+    document.getElementById('new-cat').value       = leadDaModificare.categorie||'';
+    document.getElementById('new-modello').value   = leadDaModificare.modelli||'';
+    document.getElementById('new-valore').value    = leadDaModificare.valore||'';
+    document.getElementById('new-zona').value      = leadDaModificare.zona||'Marche';
+    document.getElementById('new-stato').value     = leadDaModificare.stato||'Nuovo Lead';
+    if (hidden) hidden.value = leadDaModificare.rating||3;
   } else {
-    leadInModifica = null;
-    document.getElementById('modal-title').innerText = 'Nuovo lead';
-    document.getElementById('btn-salva-lead').innerText = 'Salva lead';
-    document.getElementById('new-nome').value = '';
-    document.getElementById('new-azienda').value = '';
+    document.getElementById('modal-title').textContent = 'Nuovo lead';
+    document.getElementById('btn-salva').textContent = 'Salva lead';
+    document.getElementById('modal-mode').value = 'nuovo';
+    document.getElementById('modal-riga').value = '';
+    ['new-nome','new-azienda','new-email','new-indirizzo','new-comune','new-prov','new-modello','new-valore'].forEach(id => document.getElementById(id).value='');
     document.getElementById('new-cell').value = '+39 ';
-    document.getElementById('new-email').value = '';
-    document.getElementById('new-indirizzo').value = '';
-    document.getElementById('new-comune').value = '';
-    document.getElementById('new-prov').value = '';
     document.getElementById('new-cat').value = '';
-    document.getElementById('new-modello').value = '';
-    document.getElementById('new-valore').value = '';
     document.getElementById('new-zona').value = 'Marche';
     document.getElementById('new-stato').value = 'Nuovo Lead';
-    // reset rating
-    const ratingContainer = document.getElementById('rating-selector');
-    if (ratingContainer) {
-      const stars = ratingContainer.querySelectorAll('span');
-      stars.forEach((star, idx) => {
-        if (idx < 3) star.classList.add('active');
-        else star.classList.remove('active');
-      });
-      const hidden = document.getElementById('new-rating');
-      if (hidden) hidden.value = 3;
-    }
+    if (hidden) hidden.value = 3;
   }
+  const rv = parseInt(hidden?.value||3);
+  document.querySelectorAll('#star-pick span').forEach((s,i) => s.classList.toggle('on',i<rv));
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-function apriModificaLead() {
-  if (!currentLead) return;
-  openModal(currentLead);
-  closeScheda();
-}
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  leadInModifica = null;
-}
-
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-}
+function apriModifica() { if (currentLead) { closeScheda(); openModal(currentLead); } }
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
 
 async function salvaLead() {
   const nome = document.getElementById('new-nome').value.trim();
   if (!nome) { showToast('Inserisci almeno il nome.'); return; }
+  const mode = document.getElementById('modal-mode').value;
+  const riga = document.getElementById('modal-riga').value;
+  const rating = document.getElementById('new-rating').value||3;
 
-  const rating = document.getElementById('new-rating') ? document.getElementById('new-rating').value : 3;
+  const params = new URLSearchParams({
+    nome, rating,
+    azienda:   document.getElementById('new-azienda').value.trim(),
+    cell:      document.getElementById('new-cell').value.trim(),
+    email:     document.getElementById('new-email').value.trim(),
+    indirizzo: document.getElementById('new-indirizzo').value.trim(),
+    comune:    document.getElementById('new-comune').value.trim(),
+    prov:      document.getElementById('new-prov').value.trim(),
+    cat:       document.getElementById('new-cat').value,
+    modello:   document.getElementById('new-modello').value.trim(),
+    valore:    document.getElementById('new-valore').value||'0',
+    zona:      document.getElementById('new-zona').value,
+    stato:     document.getElementById('new-stato').value,
+  });
 
-  if (leadInModifica) {
-    // MODIFICA: usa POST
-    const formData = new FormData();
-    formData.append('action', 'modificaLead');
-    formData.append('riga', leadInModifica._rowIndex);
-    formData.append('nome', nome);
-    formData.append('azienda', document.getElementById('new-azienda').value.trim());
-    formData.append('cell', document.getElementById('new-cell').value.trim());
-    formData.append('email', document.getElementById('new-email').value.trim());
-    formData.append('indirizzo', document.getElementById('new-indirizzo').value.trim());
-    formData.append('comune', document.getElementById('new-comune').value.trim());
-    formData.append('prov', document.getElementById('new-prov').value.trim());
-    formData.append('cat', document.getElementById('new-cat').value);
-    formData.append('modello', document.getElementById('new-modello').value.trim());
-    formData.append('valore', document.getElementById('new-valore').value || '0');
-    formData.append('zona', document.getElementById('new-zona').value);
-    formData.append('stato', document.getElementById('new-stato').value);
-    formData.append('rating', rating);
-
-    try {
-      showToast('Aggiornamento in corso...');
-      const response = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: formData
-      });
-      const result = await response.json();
-      if (result.success) {
-        closeModal();
-        showToast('✓ Lead modificato! Aggiornamento in corso...');
-        setTimeout(loadData, 5000);
-      } else {
-        showToast('Errore: ' + (result.error || 'Sconosciuto'));
-      }
-    } catch(e) {
-      console.error(e);
-      showToast('Errore di connessione. Riprova.');
-    }
+  if (mode==='modifica' && riga) {
+    params.set('action','modificaLead'); params.set('riga',riga);
   } else {
-    // NUOVO LEAD: GET (dati brevi)
-    const params = new URLSearchParams({
-      action:    'nuovoLead',
-      nome:      nome,
-      azienda:   document.getElementById('new-azienda').value.trim(),
-      cell:      document.getElementById('new-cell').value.trim(),
-      email:     document.getElementById('new-email').value.trim(),
-      indirizzo: document.getElementById('new-indirizzo').value.trim(),
-      comune:    document.getElementById('new-comune').value.trim(),
-      prov:      document.getElementById('new-prov').value.trim(),
-      cat:       document.getElementById('new-cat').value,
-      modello:   document.getElementById('new-modello').value.trim(),
-      valore:    document.getElementById('new-valore').value || '0',
-      zona:      document.getElementById('new-zona').value,
-      stato:     document.getElementById('new-stato').value,
-      rating:    rating,
-    });
-    try {
-      showToast('Salvataggio in corso...');
-      await fetch(SCRIPT_URL + '?' + params.toString());
-      closeModal();
-      showToast('✓ Lead salvato! Aggiornamento entro 5 minuti.');
-      setTimeout(loadData, 8000);
-    } catch(e) {
-      showToast('Errore di connessione. Riprova.');
-    }
-  }
-}
-
-// ── GESTIONE FOTO (POST) ─────────────────────────────────────
-async function caricaFoto() {
-  if (!currentLead) {
-    showToast('Apri prima un lead.');
-    return;
+    params.set('action','nuovoLead');
   }
 
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.capture = 'environment';
-  input.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    showToast('Caricamento foto in corso...');
-
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = async () => {
-        const base64 = reader.result.split(',')[1];
-        const formData = new FormData();
-        formData.append('action', 'caricaFoto');
-        formData.append('riga', currentLead._rowIndex);
-        formData.append('nomeFile', file.name);
-        formData.append('fileData', base64);
-        formData.append('folderId', DRIVE_FOLDER_ID);
-
-        const response = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: formData
-        });
-        const result = await response.json();
-        if (result.success) {
-          showToast('✓ Foto caricata!');
-          currentLead.foto = result.url;
-          const fotoDiv = document.getElementById('foto-preview');
-          fotoDiv.innerHTML = `
-            <img class="foto-thumb" src="${result.url}" alt="Biglietto da visita">
-            <br><a class="foto-link" href="${result.url}" target="_blank">Apri immagine</a>
-          `;
-          setTimeout(loadData, 2000);
-        } else {
-          showToast('Errore: ' + result.error);
-        }
-      };
-    } catch (err) {
-      console.error(err);
-      showToast('Errore durante il caricamento.');
-    }
-  };
-  input.click();
+  try {
+    showToast('Salvataggio in corso...');
+    await fetch(SCRIPT_URL+'?'+params.toString());
+    closeModal();
+    showToast(mode==='modifica' ? '✓ Lead modificato!' : '✓ Lead salvato! Aggiornamento entro 5 minuti.');
+    setTimeout(loadData, 8000);
+  } catch(e) { showToast('Errore di connessione. Riprova.'); }
 }
 
-// ── UTILITÀ ───────────────────────────────────────────────────
 function formatDate(d) {
   if (!d) return '';
-  try {
-    return new Date(d).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit' });
-  } catch(e) { return String(d); }
+  try { return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
+  catch(e) { return String(d); }
 }
 
-// ── AVVIO ─────────────────────────────────────────────────────
-updateGiorni();
-loadData();
-setInterval(loadData, 300000);
-initRatingSelector();
+updateGiorni(); loadData(); setInterval(loadData,300000); initStars();
 </script>
 </body>
 </html>
