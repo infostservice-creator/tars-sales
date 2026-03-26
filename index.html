@@ -1385,33 +1385,44 @@ async function salvaLead() {
   const rating = document.getElementById('new-rating') ? document.getElementById('new-rating').value : 3;
 
   if (leadInModifica) {
-    const params = new URLSearchParams({
-      action:    'modificaLead',
-      riga:      leadInModifica._rowIndex,
-      nome:      nome,
-      azienda:   document.getElementById('new-azienda').value.trim(),
-      cell:      document.getElementById('new-cell').value.trim(),
-      email:     document.getElementById('new-email').value.trim(),
-      indirizzo: document.getElementById('new-indirizzo').value.trim(),
-      comune:    document.getElementById('new-comune').value.trim(),
-      prov:      document.getElementById('new-prov').value.trim(),
-      cat:       document.getElementById('new-cat').value,
-      modello:   document.getElementById('new-modello').value.trim(),
-      valore:    document.getElementById('new-valore').value || '0',
-      zona:      document.getElementById('new-zona').value,
-      stato:     document.getElementById('new-stato').value,
-      rating:    rating,
-    });
+    // MODIFICA: usiamo POST per evitare limiti di lunghezza e problemi CORS
+    const formData = new FormData();
+    formData.append('action', 'modificaLead');
+    formData.append('riga', leadInModifica._rowIndex);
+    formData.append('nome', nome);
+    formData.append('azienda', document.getElementById('new-azienda').value.trim());
+    formData.append('cell', document.getElementById('new-cell').value.trim());
+    formData.append('email', document.getElementById('new-email').value.trim());
+    formData.append('indirizzo', document.getElementById('new-indirizzo').value.trim());
+    formData.append('comune', document.getElementById('new-comune').value.trim());
+    formData.append('prov', document.getElementById('new-prov').value.trim());
+    formData.append('cat', document.getElementById('new-cat').value);
+    formData.append('modello', document.getElementById('new-modello').value.trim());
+    formData.append('valore', document.getElementById('new-valore').value || '0');
+    formData.append('zona', document.getElementById('new-zona').value);
+    formData.append('stato', document.getElementById('new-stato').value);
+    formData.append('rating', rating);
+
     try {
       showToast('Aggiornamento in corso...');
-      await fetch(SCRIPT_URL + '?' + params.toString());
-      closeModal();
-      showToast('✓ Lead modificato! Aggiornamento in corso...');
-      setTimeout(loadData, 5000);
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: formData
+      });
+      const result = await response.json();
+      if (result.success) {
+        closeModal();
+        showToast('✓ Lead modificato! Aggiornamento in corso...');
+        setTimeout(loadData, 5000);
+      } else {
+        showToast('Errore: ' + (result.error || 'Sconosciuto'));
+      }
     } catch(e) {
+      console.error(e);
       showToast('Errore di connessione. Riprova.');
     }
   } else {
+    // NUOVO LEAD: resta GET (funziona)
     const params = new URLSearchParams({
       action:    'nuovoLead',
       nome:      nome,
