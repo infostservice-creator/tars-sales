@@ -1214,21 +1214,32 @@ function openMaps() {
   window.open('https://maps.google.com/?q=' + encodeURIComponent(addr), '_blank');
 }
 
+// ── CAMBIO STATO (ora con POST) ───────────────────────────────
 async function cambiaStato(nuovoStato) {
   if (!currentLead) return;
   try {
     showToast('Aggiornamento stato...');
-    const url = SCRIPT_URL
-      + '?action=cambiaStato'
-      + '&riga=' + currentLead._rowIndex
-      + '&stato=' + encodeURIComponent(nuovoStato);
-    await fetch(url);
-    allLeads[currentLead._rowIndex - 2].stato = nuovoStato;
-    currentLead.stato = nuovoStato;
-    renderAll();
-    showToast('✓ Stato aggiornato a "' + nuovoStato + '"!');
-    setTimeout(loadData, 5000);
+    const formData = new FormData();
+    formData.append('action', 'cambiaStato');
+    formData.append('riga', currentLead._rowIndex);
+    formData.append('stato', nuovoStato);
+
+    const response = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: formData
+    });
+    const result = await response.json();
+    if (result.status === 'ok') {
+      allLeads[currentLead._rowIndex - 2].stato = nuovoStato;
+      currentLead.stato = nuovoStato;
+      renderAll();
+      showToast('✓ Stato aggiornato a "' + nuovoStato + '"!');
+      setTimeout(loadData, 5000);
+    } else {
+      showToast('Errore: ' + (result.msg || 'Sconosciuto'));
+    }
   } catch(e) {
+    console.error(e);
     showToast('Errore di connessione. Riprova.');
   }
 }
@@ -1385,7 +1396,7 @@ async function salvaLead() {
   const rating = document.getElementById('new-rating') ? document.getElementById('new-rating').value : 3;
 
   if (leadInModifica) {
-    // MODIFICA: usiamo POST per evitare limiti di lunghezza e problemi CORS
+    // MODIFICA: usa POST
     const formData = new FormData();
     formData.append('action', 'modificaLead');
     formData.append('riga', leadInModifica._rowIndex);
@@ -1422,7 +1433,7 @@ async function salvaLead() {
       showToast('Errore di connessione. Riprova.');
     }
   } else {
-    // NUOVO LEAD: resta GET (funziona)
+    // NUOVO LEAD: GET (dati brevi)
     const params = new URLSearchParams({
       action:    'nuovoLead',
       nome:      nome,
@@ -1451,7 +1462,7 @@ async function salvaLead() {
   }
 }
 
-// ── GESTIONE FOTO (caricamento su Drive con POST) ─────────────
+// ── GESTIONE FOTO (POST) ─────────────────────────────────────
 async function caricaFoto() {
   if (!currentLead) {
     showToast('Apri prima un lead.');
@@ -1461,7 +1472,7 @@ async function caricaFoto() {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
-  input.capture = 'environment'; // su mobile apre la fotocamera
+  input.capture = 'environment';
   input.onchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
