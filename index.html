@@ -441,6 +441,11 @@ function openScheda(i) {
   if (!l) return;
   // USA _sheetRow che viene dal server — numero riga REALE nel foglio
   currentLead = {...l, _rowIndex: l._sheetRow};
+  // Vai alla Home per mostrare la scheda
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-home').classList.add('active');
+  document.querySelector('.nav-link').classList.add('active');
 
   document.getElementById('scheda-nome').textContent = l.nome||'—';
   document.getElementById('scheda-azienda').textContent = [l.azienda,l.comune].filter(Boolean).join(' · ')||'—';
