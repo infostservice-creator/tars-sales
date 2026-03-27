@@ -549,7 +549,12 @@ function openModal(leadDaModificare) {
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-function apriModifica() { if (currentLead) { closeScheda(); openModal(currentLead); } }
+function apriModifica() {
+  if (!currentLead) return;
+  const lead = currentLead;
+  closeScheda();
+  openModal(lead);
+}
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 function closeModalOutside(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
 
