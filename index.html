@@ -308,7 +308,6 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 </div>
 
 <script>
-// ── URL ORIGINALE (quello che funzionava) ─────────────────────
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrKTYzwu36sJtoefND_K5eSrN5NdWd49ufDFQZsIjQNUMW-FXMraI8yEE1YHTiyNzT/exec';
 const BUDGET = 320000;
 
@@ -440,7 +439,9 @@ function filterLeads2() {
 function openScheda(i) {
   const l = allLeads[i];
   if (!l) return;
-  currentLead = {...l, _rowIndex: i+2};
+  // USA _sheetRow che viene dal server — numero riga REALE nel foglio
+  currentLead = {...l, _rowIndex: l._sheetRow};
+
   document.getElementById('scheda-nome').textContent = l.nome||'—';
   document.getElementById('scheda-azienda').textContent = [l.azienda,l.comune].filter(Boolean).join(' · ')||'—';
   document.getElementById('s-cell').textContent = l.cellulare||'—';
@@ -454,7 +455,7 @@ function openScheda(i) {
   document.getElementById('s-followup').textContent = l.followup ? formatDate(l.followup) : '—';
   document.getElementById('s-stato').value = l.stato||'Nuovo Lead';
   const rv = parseInt(l.rating)||0;
-  document.getElementById('s-rating').innerHTML = [1,2,3,4,5].map(n=>`<span class="${n<=rv?'on':''}"}>★</span>`).join('');
+  document.getElementById('s-rating').innerHTML = [1,2,3,4,5].map(n=>`<span class="${n<=rv?'on':''}">★</span>`).join('');
   document.getElementById('scheda-wrap').classList.add('visible');
   document.getElementById('scheda-wrap').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -480,7 +481,7 @@ async function cambiaStato(nuovoStato) {
   try {
     showToast('Aggiornamento stato...');
     await fetch(SCRIPT_URL+'?action=cambiaStato&riga='+currentLead._rowIndex+'&stato='+encodeURIComponent(nuovoStato));
-    allLeads[currentLead._rowIndex-2].stato = nuovoStato;
+    allLeads.find(l => l._sheetRow === currentLead._rowIndex).stato = nuovoStato;
     currentLead.stato = nuovoStato;
     renderAll();
     showToast('✓ Stato aggiornato a "'+nuovoStato+'"!');
@@ -500,7 +501,6 @@ async function registraAttivita() {
   } catch(e) { showToast('Errore di connessione. Riprova.'); }
 }
 
-// ── RATING ───────────────────────────────────────────────────
 function initStars() {
   const pick = document.getElementById('star-pick');
   if (!pick) return;
@@ -511,7 +511,6 @@ function initStars() {
   set(parseInt(hidden?.value||3));
 }
 
-// ── MODAL ─────────────────────────────────────────────────────
 function openModal(leadDaModificare) {
   const hidden = document.getElementById('new-rating');
   if (leadDaModificare) {
@@ -555,6 +554,7 @@ function apriModifica() {
   closeScheda();
   openModal(lead);
 }
+
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 function closeModalOutside(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
 
