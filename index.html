@@ -22,6 +22,8 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); paddin
 .nav-links { display: flex; gap: 4px; }
 .nav-link { padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s; border: none; background: none; }
 .nav-link:hover, .nav-link.active { background: var(--accent-light); color: var(--accent); }
+.nav-link.lun { color: var(--amber); }
+.nav-link.lun:hover, .nav-link.lun.active { background: var(--amber-light); color: var(--amber); }
 .nav-sync { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); font-family: var(--mono); }
 .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
@@ -113,44 +115,69 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 .empty { padding: 32px; text-align: center; color: var(--muted); font-size: 13px; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1916; color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-family: var(--mono); z-index: 999; transition: transform .3s ease; pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
-
-/* ── FOLLOW-UP SECTION ───────────────────────────────────────── */
 .followup-group { margin-bottom: 24px; }
-.followup-group-title {
-  font-size: 11px; font-weight: 500; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .08em;
-  font-family: var(--mono); padding: 0 0 8px 0;
-  border-bottom: 1px solid var(--border); margin-bottom: 8px;
-}
-.followup-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 16px; border-radius: 8px; margin-bottom: 6px;
-  cursor: pointer; transition: opacity .1s; border: 1px solid transparent;
-}
+.followup-group-title { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-family: var(--mono); padding: 0 0 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+.followup-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-radius: 8px; margin-bottom: 6px; cursor: pointer; transition: opacity .1s; border: 1px solid transparent; }
 .followup-item:hover { opacity: .85; }
-.followup-item.oggi {
-  background: var(--red-light); border-color: #f5c6c2;
-}
-.followup-item.settimana {
-  background: var(--amber-light); border-color: #fde68a;
-}
-.followup-item.futuro {
-  background: var(--bg); border-color: var(--border);
-}
+.followup-item.oggi { background: var(--red-light); border-color: #f5c6c2; }
+.followup-item.settimana { background: var(--amber-light); border-color: #fde68a; }
+.followup-item.futuro { background: var(--bg); border-color: var(--border); }
 .followup-left { flex: 1; }
 .followup-nome { font-size: 13px; font-weight: 600; color: var(--text); }
 .followup-azienda { font-size: 12px; color: var(--muted); margin-top: 1px; }
 .followup-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.followup-data {
-  font-size: 12px; font-family: var(--mono); font-weight: 500;
-}
+.followup-data { font-size: 12px; font-family: var(--mono); font-weight: 500; }
 .followup-data.oggi { color: var(--red); }
 .followup-data.settimana { color: var(--amber); }
 .followup-data.futuro { color: var(--muted); }
-.followup-giorni {
-  font-size: 10px; font-family: var(--mono); color: var(--muted);
-}
+.followup-giorni { font-size: 10px; font-family: var(--mono); color: var(--muted); }
 
+/* ── LUNEDÌ STRATEGICO ─────────────────────────────── */
+.lun-header { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 16px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.lun-title { font-family: var(--mono); font-size: 13px; font-weight: 500; }
+.lun-title span { color: var(--amber); }
+.lun-date { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+.lun-kpi { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
+@media(max-width:600px){.lun-kpi{grid-template-columns:repeat(2,1fr)}}
+.lun-kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; box-shadow: var(--shadow); }
+.lun-kpi-val { font-size: 22px; font-weight: 600; font-family: var(--mono); line-height: 1; }
+.lun-kpi-val.red { color: var(--red); }
+.lun-kpi-val.amber { color: var(--amber); }
+.lun-kpi-val.blue { color: var(--accent); }
+.lun-kpi-val.purple { color: #6d3fca; }
+.lun-kpi-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 4px; }
+.lun-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+@media(max-width:700px){.lun-grid{grid-template-columns:1fr}}
+.lun-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.lun-card-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.lun-card-title { font-size: 12px; font-weight: 500; font-family: var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.lun-card-count { font-size: 11px; font-family: var(--mono); color: var(--muted); background: var(--bg); padding: 2px 7px; border-radius: 4px; }
+.lun-lead { padding: 10px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .1s; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.lun-lead:last-child { border-bottom: none; }
+.lun-lead:hover { background: var(--bg); }
+.lun-lead-name { font-size: 13px; font-weight: 500; }
+.lun-lead-sub { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: var(--mono); }
+.lun-lead-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.lun-empty { padding: 20px 16px; font-size: 13px; color: var(--muted); text-align: center; }
+.zona-row { padding: 16px; border-top: 1px solid var(--border); }
+.zona-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.zona-btn { border: 1px solid var(--border); background: var(--bg); border-radius: 6px; padding: 7px 14px; font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; font-family: var(--mono); transition: all .15s; }
+.zona-btn.active { border-color: var(--amber); background: var(--amber-light); color: var(--amber); }
+.zona-leads { font-size: 12px; color: var(--text); }
+.zona-leads-item { padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+.zona-leads-item:last-child { border-bottom: none; }
+.lun-api-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.lun-api-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.lun-api-input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 12px; color: var(--text); background: var(--bg); outline: none; font-family: var(--mono); transition: border-color .15s; }
+.lun-api-input:focus { border-color: var(--amber); }
+.lun-api-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+.btn-genera { width: 100%; background: var(--amber); color: #fff; border: none; border-radius: var(--radius); padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--sans); transition: opacity .15s; margin-bottom: 16px; }
+.btn-genera:hover { opacity: .88; }
+.btn-genera:disabled { opacity: .5; cursor: not-allowed; }
+.lun-plan { background: var(--surface); border: 1px solid var(--amber); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); display: none; }
+.lun-plan.visible { display: block; }
+.lun-plan-title { font-family: var(--mono); font-size: 12px; color: var(--amber); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
+.lun-plan-body { font-size: 14px; line-height: 1.75; color: var(--text); white-space: pre-wrap; }
 @media(max-width:500px){.nav-link{padding:6px 8px;font-size:12px}.nav-sync{display:none}}
 </style>
 </head>
@@ -162,6 +189,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
     <button class="nav-link active" onclick="showSection('home',this)">Home</button>
     <button class="nav-link" onclick="showSection('lead',this)">Lead</button>
     <button class="nav-link" onclick="showSection('followup',this)">Follow-up</button>
+    <button class="nav-link lun" onclick="showSection('lunedi',this); renderLunedi()">Lunedì</button>
   </div>
   <div class="nav-sync"><div class="sync-dot"></div><span id="sync-time">—</span></div>
 </nav>
@@ -171,7 +199,6 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 <!-- HOME -->
 <div id="section-home" class="section active">
 <div class="container">
-
   <div class="budget-bar-wrap">
     <div class="budget-header">
       <span class="budget-label">Budget annuale 2026</span>
@@ -183,14 +210,12 @@ textarea.form-control { resize: vertical; min-height: 80px; }
       <span class="giorni" id="giorni-rimasti">— giorni alla fine anno</span>
     </div>
   </div>
-
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-label">Lead totali</div><div class="kpi-value" id="kpi-totali">—</div><div class="kpi-sub">nel CRM</div></div>
     <div class="kpi-card"><div class="kpi-label">Trattative</div><div class="kpi-value" id="kpi-trattative">—</div><div class="kpi-sub">attive</div></div>
     <div class="kpi-card"><div class="kpi-label">Pipeline €</div><div class="kpi-value" id="kpi-pipeline">—</div><div class="kpi-sub">trattative aperte</div></div>
     <div class="kpi-card"><div class="kpi-label">Follow-up oggi</div><div class="kpi-value" id="kpi-followup">—</div><div class="kpi-sub">da contattare</div></div>
   </div>
-
   <div class="main-grid">
     <div class="card">
       <div class="card-header"><span class="card-title">CRM Leads</span><button class="btn-add" onclick="openModal()">+ Nuovo</button></div>
@@ -198,22 +223,17 @@ textarea.form-control { resize: vertical; min-height: 80px; }
         <input class="search-input" type="text" placeholder="Cerca nome o azienda..." id="search-input" oninput="filterLeads()">
         <select class="filter-select" id="filter-stato" onchange="filterLeads()">
           <option value="">Tutti</option>
-          <option value="Nuovo Lead">Nuovi</option>
-          <option value="Trattativa">Trattative</option>
-          <option value="Offerta Inviata">Offerte</option>
-          <option value="Cliente">Clienti</option>
-          <option value="Giri da Organizzare">Giri</option>
-          <option value="Lead Archivio">Archivio</option>
+          <option value="Nuovo Lead">Nuovi</option><option value="Trattativa">Trattative</option>
+          <option value="Offerta Inviata">Offerte</option><option value="Cliente">Clienti</option>
+          <option value="Giri da Organizzare">Giri</option><option value="Lead Archivio">Archivio</option>
         </select>
       </div>
       <div class="lead-list" id="lead-list"><div class="loading">Caricamento dati...</div></div>
     </div>
-
     <div class="card">
       <div class="card-header"><span class="card-title">Pipeline per zona</span></div>
       <div class="pipeline-section" id="pipeline-zone"><div class="loading">Caricamento...</div></div>
     </div>
-
     <div class="scheda-wrap" id="scheda-wrap">
       <div class="scheda-header">
         <div><div class="scheda-name" id="scheda-nome">—</div><div class="scheda-company" id="scheda-azienda">—</div></div>
@@ -306,6 +326,90 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 </div>
 </div>
 
+<!-- LUNEDÌ STRATEGICO -->
+<div id="section-lunedi" class="section">
+<div class="container">
+
+  <div class="lun-header">
+    <div>
+      <div class="lun-title">TARS<span>·</span>Lunedì Strategico</div>
+      <div class="lun-date" id="lun-date">—</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);font-family:var(--mono);text-align:right">
+      Obiettivi: 3-4 contatti · 3-4 check-in · 3 uscite
+    </div>
+  </div>
+
+  <!-- KPI rapidi -->
+  <div class="lun-kpi">
+    <div class="lun-kpi-card">
+      <div class="lun-kpi-val red" id="lkpi-scaduti">—</div>
+      <div class="lun-kpi-label">Follow-up scaduti</div>
+    </div>
+    <div class="lun-kpi-card">
+      <div class="lun-kpi-val amber" id="lkpi-trattative">—</div>
+      <div class="lun-kpi-label">Trattative attive</div>
+    </div>
+    <div class="lun-kpi-card">
+      <div class="lun-kpi-val blue" id="lkpi-offerte">—</div>
+      <div class="lun-kpi-label">Offerte in attesa</div>
+    </div>
+    <div class="lun-kpi-card">
+      <div class="lun-kpi-val purple" id="lkpi-giri">—</div>
+      <div class="lun-kpi-label">Giri da organizzare</div>
+    </div>
+  </div>
+
+  <!-- Lead urgenti + Trattative -->
+  <div class="lun-grid">
+    <div class="lun-card">
+      <div class="lun-card-header">
+        <span class="lun-card-title">⚡ Da contattare subito</span>
+        <span class="lun-card-count" id="lcount-urgenti">0</span>
+      </div>
+      <div id="llist-urgenti"><div class="lun-empty">Caricamento...</div></div>
+    </div>
+    <div class="lun-card">
+      <div class="lun-card-header">
+        <span class="lun-card-title">🤝 Trattative + Offerte</span>
+        <span class="lun-card-count" id="lcount-trat">0</span>
+      </div>
+      <div id="llist-trat"><div class="lun-empty">Caricamento...</div></div>
+    </div>
+  </div>
+
+  <!-- Zone uscite -->
+  <div class="lun-card" style="margin-bottom:16px">
+    <div class="lun-card-header">
+      <span class="lun-card-title">🚗 Zone uscite questa settimana</span>
+    </div>
+    <div class="zona-row">
+      <div class="zona-btns">
+        <button class="zona-btn" id="zbtn-marche" onclick="toggleZona('Marche')">Marche (<span id="zcount-marche">0</span>)</button>
+        <button class="zona-btn" id="zbtn-rimini" onclick="toggleZona('Rimini')">Rimini (<span id="zcount-rimini">0</span>)</button>
+        <button class="zona-btn" id="zbtn-perugia" onclick="toggleZona('Perugia')">Perugia (<span id="zcount-perugia">0</span>)</button>
+      </div>
+      <div class="zona-leads" id="zona-detail"></div>
+    </div>
+  </div>
+
+  <!-- API Key -->
+  <div class="lun-api-row">
+    <div class="lun-api-label">🔑 Anthropic API Key <span style="color:var(--red);font-weight:600">*</span></div>
+    <input class="lun-api-input" type="password" id="lun-apikey" placeholder="sk-ant-api03-..." oninput="sessionStorage.setItem('tars_apikey',this.value)">
+    <div class="lun-api-hint">La chiave non viene salvata sul server. Rimane nella sessione corrente del browser.</div>
+  </div>
+
+  <button class="btn-genera" id="btn-genera" onclick="generaPiano()">⚡ Genera piano settimanale</button>
+
+  <div class="lun-plan" id="lun-plan">
+    <div class="lun-plan-title" id="lun-plan-week">Piano settimana —</div>
+    <div class="lun-plan-body" id="lun-plan-body"></div>
+  </div>
+
+</div>
+</div>
+
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
@@ -367,9 +471,9 @@ textarea.form-control { resize: vertical; min-height: 80px; }
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrKTYzwu36sJtoefND_K5eSrN5NdWd49ufDFQZsIjQNUMW-FXMraI8yEE1YHTiyNzT/exec';
 const BUDGET = 320000;
-
 let allLeads = [];
 let currentLead = null;
+let zonaAttiva = [];
 
 const BADGE = {
   'Nuovo Lead':'badge-nuovo','Trattativa':'badge-trattativa','Offerta Inviata':'badge-offerta',
@@ -475,52 +579,37 @@ function renderPipelineZone() {
   }).join('');
 }
 
-// ── FOLLOW-UP ────────────────────────────────────────────────
+/* ── FOLLOW-UP ── */
 function renderFollowUp() {
-  const oggi = new Date();
-  oggi.setHours(0,0,0,0);
-  const tra7 = new Date(oggi); tra7.setDate(oggi.getDate() + 7);
-
-  // Filtra solo lead con follow-up e stati attivi
+  const oggi = new Date(); oggi.setHours(0,0,0,0);
   const statiEsclusi = ['Lead Archivio', 'Giri da Organizzare'];
   const leads = allLeads
     .filter(l => l.followup && !statiEsclusi.includes(l.stato))
     .map(l => {
-      const data = new Date(l.followup);
-      data.setHours(0,0,0,0);
+      const data = new Date(l.followup); data.setHours(0,0,0,0);
       const diffGiorni = Math.round((data - oggi) / 86400000);
       return { ...l, _data: data, _diffGiorni: diffGiorni };
     })
-    .filter(l => l._diffGiorni >= -30) // mostra anche scaduti di 30 giorni
+    .filter(l => l._diffGiorni >= -30)
     .sort((a,b) => a._data - b._data);
 
   const gruppoOggi      = leads.filter(l => l._diffGiorni <= 0);
   const gruppoSettimana = leads.filter(l => l._diffGiorni > 0 && l._diffGiorni <= 7);
   const gruppoFuturo    = leads.filter(l => l._diffGiorni > 7);
-
   const totale = leads.length;
   document.getElementById('followup-count').textContent = totale + ' in programma';
   document.getElementById('followup-empty').style.display = totale === 0 ? 'block' : 'none';
-
-  renderGruppoFollowUp('group-oggi', gruppoOggi, 'oggi',
-    gruppoOggi.length > 0 ? `🔴 Oggi e scaduti (${gruppoOggi.length})` : '');
-  renderGruppoFollowUp('group-settimana', gruppoSettimana, 'settimana',
-    gruppoSettimana.length > 0 ? `🟡 Prossimi 7 giorni (${gruppoSettimana.length})` : '');
-  renderGruppoFollowUp('group-futuro', gruppoFuturo, 'futuro',
-    gruppoFuturo.length > 0 ? `⚪ Futuri (${gruppoFuturo.length})` : '');
+  renderGruppoFollowUp('group-oggi', gruppoOggi, 'oggi', gruppoOggi.length > 0 ? `🔴 Oggi e scaduti (${gruppoOggi.length})` : '');
+  renderGruppoFollowUp('group-settimana', gruppoSettimana, 'settimana', gruppoSettimana.length > 0 ? `🟡 Prossimi 7 giorni (${gruppoSettimana.length})` : '');
+  renderGruppoFollowUp('group-futuro', gruppoFuturo, 'futuro', gruppoFuturo.length > 0 ? `⚪ Futuri (${gruppoFuturo.length})` : '');
 }
 
 function renderGruppoFollowUp(elId, leads, classe, titolo) {
   const el = document.getElementById(elId);
   if (!leads.length) { el.innerHTML = ''; return; }
-
   const items = leads.map(l => {
     const i = allLeads.indexOf(allLeads.find(x => x._sheetRow === l._sheetRow));
-    let etichetta = '';
-    if (l._diffGiorni < 0) etichetta = Math.abs(l._diffGiorni) + ' giorni fa';
-    else if (l._diffGiorni === 0) etichetta = 'oggi';
-    else etichetta = 'tra ' + l._diffGiorni + ' giorni';
-
+    let etichetta = l._diffGiorni < 0 ? Math.abs(l._diffGiorni)+' giorni fa' : l._diffGiorni===0 ? 'oggi' : 'tra '+l._diffGiorni+' giorni';
     return `<div class="followup-item ${classe}" onclick="apriSchedaDaFollowup(${i})">
       <div class="followup-left">
         <div class="followup-nome">${l.nome||'—'}</div>
@@ -532,12 +621,10 @@ function renderGruppoFollowUp(elId, leads, classe, titolo) {
       </div>
     </div>`;
   }).join('');
-
   el.innerHTML = `<div class="followup-group-title">${titolo}</div>${items}`;
 }
 
 function apriSchedaDaFollowup(i) {
-  // Vai alla Home e apri la scheda
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
   document.getElementById('section-home').classList.add('active');
@@ -545,14 +632,222 @@ function apriSchedaDaFollowup(i) {
   openScheda(i);
 }
 
-// ── FILTRI ─────────────────────────────────────────────────────
+/* ── LUNEDÌ STRATEGICO ── */
+function renderLunedi() {
+  // Data e settimana
+  const oggi = new Date();
+  oggi.setHours(0,0,0,0);
+  const oggiISO = oggi.toISOString().split('T')[0];
+  const lunStr = oggi.toLocaleDateString('it-IT', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const d = oggi.getDay();
+  const lun = new Date(oggi); lun.setDate(oggi.getDate() - (d===0?6:d-1));
+  const dom = new Date(lun); dom.setDate(lun.getDate()+6);
+  const fmtShort = dt => dt.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
+  document.getElementById('lun-date').textContent = lunStr;
+  document.getElementById('lun-plan-week').textContent = 'Piano settimana — ' + fmtShort(lun) + ' → ' + fmtShort(dom);
+
+  // API key da sessionStorage
+  const saved = sessionStorage.getItem('tars_apikey');
+  if (saved) document.getElementById('lun-apikey').value = saved;
+
+  // Calcola dati
+  const statiAttivi = ['Nuovo Lead','Trattativa','Offerta Inviata','Giri da Organizzare'];
+  const scaduti = allLeads.filter(l => {
+    if (!l.followup || !statiAttivi.includes(l.stato)) return false;
+    try { return new Date(l.followup).toISOString().split('T')[0] <= oggiISO; } catch(e){return false;}
+  }).sort((a,b) => new Date(a.followup)-new Date(b.followup));
+
+  const trattative = allLeads.filter(l => l.stato==='Trattativa'||l.stato==='Offerta Inviata')
+    .sort((a,b) => (parseFloat(b.valore)||0)-(parseFloat(a.valore)||0));
+
+  const giriM = allLeads.filter(l => l.stato==='Giri da Organizzare' && l.zona==='Marche');
+  const giriR = allLeads.filter(l => l.stato==='Giri da Organizzare' && l.zona==='Provincia di Rimini');
+  const giriP = allLeads.filter(l => l.stato==='Giri da Organizzare' && l.zona==='Provincia di Perugia');
+
+  // KPI
+  document.getElementById('lkpi-scaduti').textContent = scaduti.length;
+  document.getElementById('lkpi-trattative').textContent = allLeads.filter(l=>l.stato==='Trattativa').length;
+  document.getElementById('lkpi-offerte').textContent = allLeads.filter(l=>l.stato==='Offerta Inviata').length;
+  document.getElementById('lkpi-giri').textContent = giriM.length+giriR.length+giriP.length;
+  document.getElementById('zcount-marche').textContent = giriM.length;
+  document.getElementById('zcount-rimini').textContent = giriR.length;
+  document.getElementById('zcount-perugia').textContent = giriP.length;
+
+  // Lista urgenti (scaduti + lead hot senza follow-up recente)
+  const urgenti = scaduti.slice(0, 10);
+  document.getElementById('lcount-urgenti').textContent = urgenti.length;
+  document.getElementById('llist-urgenti').innerHTML = urgenti.length ? urgenti.map(l => {
+    const diff = Math.round((oggi - new Date(new Date(l.followup).setHours(0,0,0,0))) / 86400000);
+    const etiq = diff===0?'oggi':diff+' giorni fa';
+    return `<div class="lun-lead" onclick="apriDaLunedi(${allLeads.indexOf(l)})">
+      <div>
+        <div class="lun-lead-name">${l.nome||'—'}</div>
+        <div class="lun-lead-sub">${l.azienda||''} ${l.comune?'· '+l.comune:''}</div>
+      </div>
+      <div class="lun-lead-right">
+        <span class="badge ${BADGE[l.stato]||'badge-nuovo'}">${l.stato}</span>
+        <span style="font-size:10px;color:var(--red);font-family:var(--mono)">${etiq}</span>
+      </div>
+    </div>`;
+  }).join('') : '<div class="lun-empty">✓ Nessun follow-up scaduto</div>';
+
+  // Lista trattative
+  document.getElementById('lcount-trat').textContent = trattative.length;
+  document.getElementById('llist-trat').innerHTML = trattative.length ? trattative.slice(0,8).map(l => {
+    const val = parseFloat(l.valore)||0;
+    return `<div class="lun-lead" onclick="apriDaLunedi(${allLeads.indexOf(l)})">
+      <div>
+        <div class="lun-lead-name">${l.nome||'—'}</div>
+        <div class="lun-lead-sub">${l.azienda||''} ${l.zona?'· '+l.zona:''}</div>
+      </div>
+      <div class="lun-lead-right">
+        <span class="badge ${BADGE[l.stato]||'badge-nuovo'}">${l.stato}</span>
+        ${val>0?`<span style="font-size:11px;font-family:var(--mono);color:var(--accent)">€${val.toLocaleString('it-IT')}</span>`:''}
+      </div>
+    </div>`;
+  }).join('') : '<div class="lun-empty">Nessuna trattativa aperta</div>';
+}
+
+function apriDaLunedi(i) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-home').classList.add('active');
+  document.querySelector('.nav-link').classList.add('active');
+  openScheda(i);
+}
+
+function toggleZona(z) {
+  const keyMap = {'Marche':'marche','Rimini':'rimini','Perugia':'perugia'};
+  const zonaKey = keyMap[z];
+  const zonaFull = z==='Rimini'?'Provincia di Rimini':z==='Perugia'?'Provincia di Perugia':'Marche';
+  if (zonaAttiva.includes(z)) {
+    zonaAttiva = zonaAttiva.filter(x=>x!==z);
+    document.getElementById('zbtn-'+zonaKey).classList.remove('active');
+  } else {
+    zonaAttiva.push(z);
+    document.getElementById('zbtn-'+zonaKey).classList.add('active');
+  }
+  const detail = document.getElementById('zona-detail');
+  if (!zonaAttiva.length) { detail.innerHTML=''; return; }
+  let html = '';
+  zonaAttiva.forEach(zz => {
+    const zf = zz==='Rimini'?'Provincia di Rimini':zz==='Perugia'?'Provincia di Perugia':'Marche';
+    const leads = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona===zf);
+    if (!leads.length) { html+=`<div style="font-size:12px;color:var(--muted);padding:4px 0">${zz}: nessun giro da organizzare</div>`; return; }
+    html+=`<div style="font-size:11px;font-weight:500;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 4px">${zz}</div>`;
+    html+=leads.map(l=>`<div class="zona-leads-item">
+      <span style="font-weight:500">${l.nome||'—'}</span>
+      <span style="color:var(--muted);font-size:12px">${l.comune||''}</span>
+    </div>`).join('');
+  });
+  detail.innerHTML=html;
+}
+
+async function generaPiano() {
+  const apiKey = document.getElementById('lun-apikey').value.trim();
+  if (!apiKey || !apiKey.startsWith('sk-')) {
+    showToast('Inserisci una API key Anthropic valida (sk-ant-...)');
+    return;
+  }
+  if (!allLeads.length) {
+    showToast('Dati CRM non ancora caricati. Attendi qualche secondo.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-genera');
+  btn.disabled = true; btn.textContent = '⏳ Generazione in corso...';
+
+  const oggi = new Date(); oggi.setHours(0,0,0,0);
+  const oggiISO = oggi.toISOString().split('T')[0];
+  const d = oggi.getDay();
+  const lun = new Date(oggi); lun.setDate(oggi.getDate()-(d===0?6:d-1));
+  const dom = new Date(lun); dom.setDate(lun.getDate()+6);
+  const fmtShort = dt => dt.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
+  const settRange = fmtShort(lun)+' → '+fmtShort(dom);
+
+  // Prepara dati per il prompt
+  const scaduti = allLeads.filter(l => l.followup && ['Nuovo Lead','Trattativa','Offerta Inviata'].includes(l.stato) && new Date(l.followup).toISOString().split('T')[0] <= oggiISO).slice(0,8);
+  const trattative = allLeads.filter(l=>l.stato==='Trattativa').sort((a,b)=>(parseFloat(b.valore)||0)-(parseFloat(a.valore)||0)).slice(0,6);
+  const offerte = allLeads.filter(l=>l.stato==='Offerta Inviata').slice(0,5);
+  const giriM = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Marche').slice(0,5);
+  const giriR = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Provincia di Rimini').slice(0,5);
+  const giriP = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Provincia di Perugia').slice(0,5);
+  const zoneScelte = zonaAttiva.length ? zonaAttiva.join(', ') : 'tutte';
+
+  const fmtLead = l => `${l.nome||'?'}${l.azienda?' ('+l.azienda+')':''}${l.comune?' - '+l.comune:''}${l.valore&&parseFloat(l.valore)>0?' €'+parseFloat(l.valore).toLocaleString('it-IT'):''}`;
+
+  const prompt = `Sei lo strategic advisor di Sergio Bruni — vende strumenti di misura professionali (laser scanner, GPS, droni, georadar) per Dynatech SRL nelle province di Marche, Rimini e Perugia.
+
+OBIETTIVI FISSI: almeno 3-4 contatti lead/trattative, 3-4 check-in clienti, 3 uscite territorio.
+SETTIMANA: ${settRange}
+ZONE SCELTE QUESTA SETTIMANA: ${zoneScelte}
+
+FOLLOW-UP SCADUTI (${scaduti.length}) — contattare subito:
+${scaduti.map(fmtLead).join('\n')||'Nessuno'}
+
+TRATTATIVE ATTIVE (${trattative.length}):
+${trattative.map(fmtLead).join('\n')||'Nessuna'}
+
+OFFERTE INVIATE IN ATTESA (${offerte.length}):
+${offerte.map(fmtLead).join('\n')||'Nessuna'}
+
+GIRI DA ORGANIZZARE:
+Marche: ${giriM.map(fmtLead).join(', ')||'—'}
+Rimini: ${giriR.map(fmtLead).join(', ')||'—'}
+Perugia: ${giriP.map(fmtLead).join(', ')||'—'}
+
+Crea un piano settimanale PRATICO e SPECIFICO con i nomi reali del CRM. Struttura:
+
+⚡ PRIORITÀ ASSOLUTE (max 3 — le cose senza cui la settimana è persa)
+
+📞 DA CONTATTARE OGGI/DOMANI (nome, motivo, urgenza)
+
+📞 DA CONTATTARE ENTRO VENERDÌ (nome, motivo)
+
+🚗 3 USCITE PIANIFICATE (giorno suggerito + zona + obiettivo specifico + lead da visitare)
+
+📅 STRUTTURA SETTIMANA CONSIGLIATA (blocchi orari per giorno)
+
+⚠️ NON DIMENTICARE (2-3 rischi concreti)
+
+Sii diretto, concreto, usa i nomi reali. Italiano. Max 500 parole.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const testo = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+    document.getElementById('lun-plan-body').textContent = testo;
+    document.getElementById('lun-plan').classList.add('visible');
+    document.getElementById('lun-plan').scrollIntoView({behavior:'smooth',block:'start'});
+    showToast('✓ Piano generato!');
+  } catch(e) {
+    showToast('Errore API: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled=false; btn.textContent='⚡ Genera piano settimanale';
+  }
+}
+
+/* ── FILTRI ── */
 function filterLeads() {
   const q = document.getElementById('search-input').value.toLowerCase();
   const stato = document.getElementById('filter-stato').value;
   renderLeadList('lead-list', allLeads.filter(l =>
-    (!q || (l.nome||'').toLowerCase().includes(q) || (l.azienda||'').toLowerCase().includes(q)) &&
-    (!stato || l.stato===stato)
-  ));
+    (!q||(l.nome||'').toLowerCase().includes(q)||(l.azienda||'').toLowerCase().includes(q))&&(!stato||l.stato===stato)));
 }
 
 function filterLeads2() {
@@ -560,22 +855,18 @@ function filterLeads2() {
   const stato = document.getElementById('filter-stato2').value;
   const zona = document.getElementById('filter-zona').value;
   renderLeadList('lead-list2', allLeads.filter(l =>
-    (!q || (l.nome||'').toLowerCase().includes(q) || (l.azienda||'').toLowerCase().includes(q)) &&
-    (!stato || l.stato===stato) && (!zona || l.zona===zona)
-  ));
+    (!q||(l.nome||'').toLowerCase().includes(q)||(l.azienda||'').toLowerCase().includes(q))&&
+    (!stato||l.stato===stato)&&(!zona||l.zona===zona)));
 }
 
-// ── SCHEDA ────────────────────────────────────────────────────
+/* ── SCHEDA ── */
 function openScheda(i) {
-  const l = allLeads[i];
-  if (!l) return;
+  const l = allLeads[i]; if (!l) return;
   currentLead = {...l, _rowIndex: l._sheetRow};
-  // Vai alla Home per mostrare la scheda
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
   document.getElementById('section-home').classList.add('active');
   document.querySelector('.nav-link').classList.add('active');
-
   document.getElementById('scheda-nome').textContent = l.nome||'—';
   document.getElementById('scheda-azienda').textContent = [l.azienda,l.comune].filter(Boolean).join(' · ')||'—';
   document.getElementById('s-cell').textContent = l.cellulare||'—';
@@ -635,10 +926,9 @@ async function registraAttivita() {
   } catch(e) { showToast('Errore di connessione. Riprova.'); }
 }
 
-// ── RATING ───────────────────────────────────────────────────
+/* ── RATING ── */
 function initStars() {
-  const pick = document.getElementById('star-pick');
-  if (!pick) return;
+  const pick = document.getElementById('star-pick'); if (!pick) return;
   const stars = pick.querySelectorAll('span');
   const hidden = document.getElementById('new-rating');
   function set(v) { stars.forEach((s,i) => s.classList.toggle('on',i<v)); if(hidden) hidden.value=v; }
@@ -646,7 +936,7 @@ function initStars() {
   set(parseInt(hidden?.value||3));
 }
 
-// ── MODAL ─────────────────────────────────────────────────────
+/* ── MODAL ── */
 function openModal(leadDaModificare) {
   const hidden = document.getElementById('new-rating');
   if (leadDaModificare) {
@@ -684,13 +974,7 @@ function openModal(leadDaModificare) {
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-function apriModifica() {
-  if (!currentLead) return;
-  const lead = currentLead;
-  closeScheda();
-  openModal(lead);
-}
-
+function apriModifica() { if (!currentLead) return; const lead=currentLead; closeScheda(); openModal(lead); }
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 function closeModalOutside(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
 
@@ -700,28 +984,22 @@ async function salvaLead() {
   const mode = document.getElementById('modal-mode').value;
   const riga = document.getElementById('modal-riga').value;
   const rating = document.getElementById('new-rating').value||3;
-
   const params = new URLSearchParams({
     nome, rating,
-    azienda:   document.getElementById('new-azienda').value.trim(),
-    cell:      document.getElementById('new-cell').value.trim(),
-    email:     document.getElementById('new-email').value.trim(),
+    azienda: document.getElementById('new-azienda').value.trim(),
+    cell:    document.getElementById('new-cell').value.trim(),
+    email:   document.getElementById('new-email').value.trim(),
     indirizzo: document.getElementById('new-indirizzo').value.trim(),
-    comune:    document.getElementById('new-comune').value.trim(),
-    prov:      document.getElementById('new-prov').value.trim(),
-    cat:       document.getElementById('new-cat').value,
-    modello:   document.getElementById('new-modello').value.trim(),
-    valore:    document.getElementById('new-valore').value||'0',
-    zona:      document.getElementById('new-zona').value,
-    stato:     document.getElementById('new-stato').value,
+    comune:  document.getElementById('new-comune').value.trim(),
+    prov:    document.getElementById('new-prov').value.trim(),
+    cat:     document.getElementById('new-cat').value,
+    modello: document.getElementById('new-modello').value.trim(),
+    valore:  document.getElementById('new-valore').value||'0',
+    zona:    document.getElementById('new-zona').value,
+    stato:   document.getElementById('new-stato').value,
   });
-
-  if (mode==='modifica' && riga) {
-    params.set('action','modificaLead'); params.set('riga',riga);
-  } else {
-    params.set('action','nuovoLead');
-  }
-
+  if (mode==='modifica'&&riga) { params.set('action','modificaLead'); params.set('riga',riga); }
+  else { params.set('action','nuovoLead'); }
   try {
     showToast('Salvataggio in corso...');
     await fetch(SCRIPT_URL+'?'+params.toString());
