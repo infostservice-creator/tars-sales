@@ -393,14 +393,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
     </div>
   </div>
 
-  <!-- API Key -->
-  <div class="lun-api-row">
-    <div class="lun-api-label">🔑 Anthropic API Key <span style="color:var(--red);font-weight:600">*</span></div>
-    <input class="lun-api-input" type="password" id="lun-apikey" placeholder="sk-ant-api03-..." oninput="sessionStorage.setItem('tars_apikey',this.value)">
-    <div class="lun-api-hint">La chiave non viene salvata sul server. Rimane nella sessione corrente del browser.</div>
-  </div>
-
-  <button class="btn-genera" id="btn-genera" onclick="generaPiano()">⚡ Genera piano settimanale</button>
+  <button class="btn-genera" id="btn-genera" onclick="generaPiano()">⚡ Genera piano con Claude.ai</button>
 
   <div class="lun-plan" id="lun-plan">
     <div class="lun-plan-title" id="lun-plan-week">Piano settimana —</div>
@@ -644,7 +637,7 @@ function renderLunedi() {
   const dom = new Date(lun); dom.setDate(lun.getDate()+6);
   const fmtShort = dt => dt.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
   document.getElementById('lun-date').textContent = lunStr;
-  document.getElementById('lun-plan-week').textContent = 'Piano settimana — ' + fmtShort(lun) + ' → ' + fmtShort(dom);
+  document.getElementById('lun-plan-week').textContent = 'Prompt pronto — ' + fmtShort(lun) + ' → ' + fmtShort(dom);
 
   // API key da sessionStorage
   const saved = sessionStorage.getItem('tars_apikey');
@@ -743,19 +736,11 @@ function toggleZona(z) {
   detail.innerHTML=html;
 }
 
-async function generaPiano() {
-  const apiKey = document.getElementById('lun-apikey').value.trim();
-  if (!apiKey || !apiKey.startsWith('sk-')) {
-    showToast('Inserisci una API key Anthropic valida (sk-ant-...)');
-    return;
-  }
+function generaPiano() {
   if (!allLeads.length) {
     showToast('Dati CRM non ancora caricati. Attendi qualche secondo.');
     return;
   }
-
-  const btn = document.getElementById('btn-genera');
-  btn.disabled = true; btn.textContent = '⏳ Generazione in corso...';
 
   const oggi = new Date(); oggi.setHours(0,0,0,0);
   const oggiISO = oggi.toISOString().split('T')[0];
@@ -765,7 +750,6 @@ async function generaPiano() {
   const fmtShort = dt => dt.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
   const settRange = fmtShort(lun)+' → '+fmtShort(dom);
 
-  // Prepara dati per il prompt
   const scaduti = allLeads.filter(l => l.followup && ['Nuovo Lead','Trattativa','Offerta Inviata'].includes(l.stato) && new Date(l.followup).toISOString().split('T')[0] <= oggiISO).slice(0,8);
   const trattative = allLeads.filter(l=>l.stato==='Trattativa').sort((a,b)=>(parseFloat(b.valore)||0)-(parseFloat(a.valore)||0)).slice(0,6);
   const offerte = allLeads.filter(l=>l.stato==='Offerta Inviata').slice(0,5);
@@ -773,7 +757,6 @@ async function generaPiano() {
   const giriR = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Provincia di Rimini').slice(0,5);
   const giriP = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Provincia di Perugia').slice(0,5);
   const zoneScelte = zonaAttiva.length ? zonaAttiva.join(', ') : 'tutte';
-
   const fmtLead = l => `${l.nome||'?'}${l.azienda?' ('+l.azienda+')':''}${l.comune?' - '+l.comune:''}${l.valore&&parseFloat(l.valore)>0?' €'+parseFloat(l.valore).toLocaleString('it-IT'):''}`;
 
   const prompt = `Sei lo strategic advisor di Sergio Bruni — vende strumenti di misura professionali (laser scanner, GPS, droni, georadar) per Dynatech SRL nelle province di Marche, Rimini e Perugia.
@@ -812,34 +795,18 @@ Crea un piano settimanale PRATICO e SPECIFICO con i nomi reali del CRM. Struttur
 
 Sii diretto, concreto, usa i nomi reali. Italiano. Max 500 parole.`;
 
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    const testo = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
-    document.getElementById('lun-plan-body').textContent = testo;
+  navigator.clipboard.writeText(prompt).then(() => {
+    window.open('https://claude.ai/new', '_blank');
+    showToast('✓ Prompt copiato! Incolla su Claude.ai con Ctrl+V');
+    document.getElementById('lun-plan-body').textContent = '⏳ Prompt copiato negli appunti.\n\nClaude.ai si è aperto in una nuova scheda.\nIncolla il testo (Ctrl+V) e premi Invio.\n\nIl piano apparirà lì in pochi secondi.';
     document.getElementById('lun-plan').classList.add('visible');
-    document.getElementById('lun-plan').scrollIntoView({behavior:'smooth',block:'start'});
-    showToast('✓ Piano generato!');
-  } catch(e) {
-    showToast('Errore API: ' + e.message);
-    console.error(e);
-  } finally {
-    btn.disabled=false; btn.textContent='⚡ Genera piano settimanale';
-  }
+  }).catch(() => {
+    // Fallback: mostra il prompt in un textarea per copia manuale
+    document.getElementById('lun-plan-body').textContent = prompt;
+    document.getElementById('lun-plan').classList.add('visible');
+    window.open('https://claude.ai/new', '_blank');
+    showToast('Copia il testo qui sotto e incollalo su Claude.ai');
+  });
 }
 
 /* ── FILTRI ── */
