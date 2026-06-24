@@ -300,7 +300,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
       </select>
       <select class="filter-select" id="filter-zona" onchange="filterLeads2()">
         <option value="">Tutte le zone</option>
-        <option value="Marche">Marche</option><option value="Provincia di Perugia">Perugia</option><option value="Provincia di Rimini">Rimini</option>
+        <option value="Marche">Marche</option><option value="Provincia di Perugia">Perugia</option><option value="Provincia di Rimini">Rimini</option><option value="Provincia di Teramo">Teramo</option>
       </select>
     </div>
     <div class="lead-list" id="lead-list2" style="max-height:600px"><div class="loading">Caricamento dati...</div></div>
@@ -388,6 +388,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
         <button class="zona-btn" id="zbtn-marche" onclick="toggleZona('Marche')">Marche (<span id="zcount-marche">0</span>)</button>
         <button class="zona-btn" id="zbtn-rimini" onclick="toggleZona('Rimini')">Rimini (<span id="zcount-rimini">0</span>)</button>
         <button class="zona-btn" id="zbtn-perugia" onclick="toggleZona('Perugia')">Perugia (<span id="zcount-perugia">0</span>)</button>
+        <button class="zona-btn" id="zbtn-teramo" onclick="toggleZona('Teramo')">Teramo (<span id="zcount-teramo">0</span>)</button>
       </div>
       <div class="zona-leads" id="zona-detail"></div>
     </div>
@@ -435,7 +436,7 @@ textarea.form-control { resize: vertical; min-height: 80px; }
         <div class="form-group">
           <label class="form-label">Zona</label>
           <select class="form-control" id="new-zona">
-            <option value="Marche">Marche</option><option value="Provincia di Perugia">Provincia di Perugia</option><option value="Provincia di Rimini">Provincia di Rimini</option>
+            <option value="Marche">Marche</option><option value="Provincia di Perugia">Provincia di Perugia</option><option value="Provincia di Rimini">Provincia di Rimini</option><option value="Provincia di Teramo">Provincia di Teramo</option>
           </select>
         </div>
       </div>
@@ -558,7 +559,7 @@ function renderLeadList(id, leads) {
 }
 
 function renderPipelineZone() {
-  const zone = ['Marche','Provincia di Perugia','Provincia di Rimini'];
+  const zone = ['Marche','Provincia di Perugia','Provincia di Rimini','Provincia di Teramo'];
   const el = document.getElementById('pipeline-zone');
   if (!allLeads.length) { el.innerHTML='<div class="empty">Nessun dato disponibile</div>'; return; }
   el.innerHTML = zone.map(z => {
@@ -656,15 +657,17 @@ function renderLunedi() {
   const giriM = allLeads.filter(l => l.stato==='Giri da Organizzare' && l.zona==='Marche');
   const giriR = allLeads.filter(l => l.stato==='Giri da Organizzare' && l.zona==='Provincia di Rimini');
   const giriP = allLeads.filter(l => l.stato==='Giri da Organizzare' && l.zona==='Provincia di Perugia');
+  const giriT2 = allLeads.filter(l => l.stato==='Giri da Organizzare' && l.zona==='Provincia di Teramo');
 
   // KPI
   document.getElementById('lkpi-scaduti').textContent = scaduti.length;
   document.getElementById('lkpi-trattative').textContent = allLeads.filter(l=>l.stato==='Trattativa').length;
   document.getElementById('lkpi-offerte').textContent = allLeads.filter(l=>l.stato==='Offerta Inviata').length;
-  document.getElementById('lkpi-giri').textContent = giriM.length+giriR.length+giriP.length;
+  document.getElementById('lkpi-giri').textContent = giriM.length+giriR.length+giriP.length+giriT2.length;
   document.getElementById('zcount-marche').textContent = giriM.length;
   document.getElementById('zcount-rimini').textContent = giriR.length;
   document.getElementById('zcount-perugia').textContent = giriP.length;
+  document.getElementById('zcount-teramo').textContent = giriT2.length;
 
   // Lista urgenti (scaduti + lead hot senza follow-up recente)
   const urgenti = scaduti.slice(0, 10);
@@ -710,9 +713,9 @@ function apriDaLunedi(i) {
 }
 
 function toggleZona(z) {
-  const keyMap = {'Marche':'marche','Rimini':'rimini','Perugia':'perugia'};
+  const keyMap = {'Marche':'marche','Rimini':'rimini','Perugia':'perugia','Teramo':'teramo'};
   const zonaKey = keyMap[z];
-  const zonaFull = z==='Rimini'?'Provincia di Rimini':z==='Perugia'?'Provincia di Perugia':'Marche';
+  const zonaFull = z==='Rimini'?'Provincia di Rimini':z==='Perugia'?'Provincia di Perugia':z==='Teramo'?'Provincia di Teramo':'Marche';
   if (zonaAttiva.includes(z)) {
     zonaAttiva = zonaAttiva.filter(x=>x!==z);
     document.getElementById('zbtn-'+zonaKey).classList.remove('active');
@@ -724,7 +727,7 @@ function toggleZona(z) {
   if (!zonaAttiva.length) { detail.innerHTML=''; return; }
   let html = '';
   zonaAttiva.forEach(zz => {
-    const zf = zz==='Rimini'?'Provincia di Rimini':zz==='Perugia'?'Provincia di Perugia':'Marche';
+    const zf = zz==='Rimini'?'Provincia di Rimini':zz==='Perugia'?'Provincia di Perugia':zz==='Teramo'?'Provincia di Teramo':'Marche';
     const leads = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona===zf);
     if (!leads.length) { html+=`<div style="font-size:12px;color:var(--muted);padding:4px 0">${zz}: nessun giro da organizzare</div>`; return; }
     html+=`<div style="font-size:11px;font-weight:500;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin:8px 0 4px">${zz}</div>`;
@@ -756,10 +759,11 @@ function generaPiano() {
   const giriM = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Marche').slice(0,5);
   const giriR = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Provincia di Rimini').slice(0,5);
   const giriP = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Provincia di Perugia').slice(0,5);
+  const giriT = allLeads.filter(l=>l.stato==='Giri da Organizzare'&&l.zona==='Provincia di Teramo').slice(0,5);
   const zoneScelte = zonaAttiva.length ? zonaAttiva.join(', ') : 'tutte';
   const fmtLead = l => `${l.nome||'?'}${l.azienda?' ('+l.azienda+')':''}${l.comune?' - '+l.comune:''}${l.valore&&parseFloat(l.valore)>0?' €'+parseFloat(l.valore).toLocaleString('it-IT'):''}`;
 
-  const prompt = `Sei lo strategic advisor di Sergio Bruni — vende strumenti di misura professionali (laser scanner, GPS, droni, georadar) per Dynatech SRL nelle province di Marche, Rimini e Perugia.
+  const prompt = `Sei lo strategic advisor di Sergio Bruni — vende strumenti di misura professionali (laser scanner, GPS, droni, georadar) per Dynatech SRL nelle province di Marche, Rimini, Perugia e Teramo.
 
 OBIETTIVI FISSI: almeno 3-4 contatti lead/trattative, 3-4 check-in clienti, 3 uscite territorio.
 SETTIMANA: ${settRange}
@@ -778,6 +782,7 @@ GIRI DA ORGANIZZARE:
 Marche: ${giriM.map(fmtLead).join(', ')||'—'}
 Rimini: ${giriR.map(fmtLead).join(', ')||'—'}
 Perugia: ${giriP.map(fmtLead).join(', ')||'—'}
+Teramo: ${giriT.map(fmtLead).join(', ')||'—'}
 
 Crea un piano settimanale PRATICO e SPECIFICO con i nomi reali del CRM. Struttura:
 
